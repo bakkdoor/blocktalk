@@ -1,0 +1,211 @@
+# 'message' language specification
+# comments work like this
+# or like this:
+
+#-#
+  multiline comments look like this
+#-#
+
+# simple global  method definition.
+# methods in general are simply names to which anonymous methods / codeblocks are bound.
+# in contrast to ruby, there is no difference between lambdas, procs & blocks.
+foo = do |bar baz|
+  bar puts # sending message puts to object bar
+end
+
+# square is a function, that takes one argument (x)
+# and returns the square of it.
+# note: as in ruby, message is a expression-based language,
+# so no explicit return statement is needed.
+# the last expression gets returned implicitly.
+square = do |x|
+  x * x
+end
+
+
+# creating a subclass of Object called Integer.
+# this is similar to smalltalks way of subclassing.
+#Object subclass Integer do
+Integer = Class new do
+  # include Numerical module (as in ruby):
+  include Numerical
+
+  # operators are simply methods / messages that a class can define however it wants.
+  # in this case, the * operator is defined to be a message with one parameter (y).
+  * = do |y|
+
+    # |> is a special operator that allows the last expression in a line above this one to be used
+    # as the argument to a method call.
+    # this makes it easier to handle several methodcalls to an object, retrieved in a more complex expression
+    # without needing to save it to a local variable or whatever.
+
+    (y is_a? Number)
+    |> if_true do
+      # this gets executed, if the upper condition (boolean) object is true
+      (y is_a? Integer) if_true do
+        Math base_int_mult : self y # some base function defined in the vm or whatever (in this case in the Math module)
+      end
+
+      (y is_a? Float) if_true do
+        Math base_float_mult : self y
+      end
+    end
+
+    |> if_false do
+      # raise an exception:
+      Error raise : WrongArgumentError new "Expected a number, but got #{y class}"
+    end
+
+  end
+end
+
+
+File = Class new Stream do
+
+  # constructor that takes a file handle given by the operating system or so.
+  new = do |file_handle|
+    File new : (file_handle file_name) (file_handle access_mode)
+  end
+
+  # constructor to File class
+  new = do |file_name access_mode|
+    @file_name = file_name
+    @access_mode = access_mode
+
+    block_given?
+    |> if_true do
+      File open : file_name access_mode do |f|
+        yield f
+      end
+    end
+  end
+
+  # class method with named parameter.
+  # gets calles like this:
+  # File open "foo.txt" with:"r" do |f|
+  #   Console puts : f readlines
+  # end
+  self open = do |file_name with: access_mode = nil|
+    access_mode ||= "r"
+    block_given? if_true do
+      # trying method takes a block (between { and }).
+      # this would also work: trying do ... end (same as in ruby).
+      # in ruby: trying = begin.
+      trying{
+        # open file etc.
+        file = File new : IO base_file_open : file_name access_mode
+        # yield to block
+        yield file
+
+        # catching errors is easy.
+        # simply use catch method with a given block to execute
+        # if the specified class (as the parameter) is caugth.
+        catch IOError do |ex|
+          Console puts : "Error while trying to open file #{file_name} with access mode: #{access_mode}"
+        end
+
+        # Error is baseclass of all exceptions -> this will get called when all the others didn't match
+        catch Error do |ex|
+
+        end
+
+        # blocks to methodcalls can also be done via curly-braces syntax {} (instead of do ... end)
+        ensure{
+          file close # always close the file
+        }
+      }
+
+      # and finally close again
+    end
+  end
+
+  # ... more methods for File class go here ...
+end
+
+
+
+# Numerical - Module.
+# Holds some basic mathematical messages that can be used by different numerical types.
+Numerical = Module new do
+
+  abs = {
+    (self > 0)
+    |> if_true { self }
+    |> if_false { self * -1 }
+  }
+
+  ** = |power| {
+    ((abs power) == 0) if_true { return 1 }
+
+    return self * (self ** (power - 1))
+  }
+
+  expt = (**) # define expt to be the same as **
+
+  - = {
+    self * -1
+  }
+
+  negate = (-)
+
+  fac = {
+    (self <= 1) if_true { return 1 }
+    self * ((self - 1) fac)
+  }
+
+  # maybe some more ...
+
+  incr = { self += 1 }
+  decr = { self -= 1 }
+
+  to = do |n|
+    block_given? if_true {
+      i = self
+      msg = (incr)
+
+      (i > n) if_true {
+        msg = (decr)
+      }
+
+      (i != n) while_true {
+        yield i
+        i msg  # increment or decrement i, based on value of msg
+      }
+    }
+  end
+
+  times = {
+    i = self
+    (i > 0) while_true {
+      i decr
+      yield i
+    }
+  }
+end
+
+
+
+Boolean = Class new do
+
+  if_true = {
+    # check (via some core routine in the vm) if self == true.
+    # if so: yield to block.
+    # finally, return self for easy chaining.
+    yield
+    self
+  }
+
+  if_false = {
+    # similar to if_true, but only yield, if self == false.
+    yield
+    self
+  }
+
+  while_true = {
+    self if_true do
+      yield
+      self while_true
+    end
+  }
+
+end

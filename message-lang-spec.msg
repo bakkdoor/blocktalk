@@ -25,7 +25,8 @@ end
 
 # creating a subclass of Object called Integer.
 # this is similar to smalltalks way of subclassing.
-#Object subclass Integer do
+#Object subclass: Integer do
+#Integer = Object subclass do
 Integer = Class new do
   # include Numerical module (as in ruby):
   include Numerical
@@ -39,42 +40,41 @@ Integer = Class new do
     # this makes it easier to handle several methodcalls to an object, retrieved in a more complex expression
     # without needing to save it to a local variable or whatever.
 
-    (y is_a? Number)
+    (y is_a?: Number)
     |> if_true do
       # this gets executed, if the upper condition (boolean) object is true
-      (y is_a? Integer) if_true do
-        Math base_int_mult : self y # some base function defined in the vm or whatever (in this case in the Math module)
+      (y is_a?: Integer) if_true do
+        Math base_int_mult: self with: y # some base function defined in the vm or whatever (in this case in the Math module)
       end
 
-      (y is_a? Float) if_true do
-        Math base_float_mult : self y
+      (y is_a?: Float) if_true do
+        Math base_float_mult: self with: y
       end
     end
 
     |> if_false do
       # raise an exception:
-      Error raise : WrongArgumentError new "Expected a number, but got #{y class}"
+      Error raise: (WrongArgumentError new: "Expected a number, but got #{y class}")
     end
 
   end
 end
 
 
-File = Class new Stream do
-
+File = Stream subclass do
   # constructor that takes a file handle given by the operating system or so.
   new = do |file_handle|
-    File new : (file_handle file_name) (file_handle access_mode)
+    File new: (file_handle file_name) mode: (file_handle access_mode)
   end
 
   # constructor to File class
-  new = do |file_name access_mode|
+  new = do |file_name mode|
     @file_name = file_name
-    @access_mode = access_mode
+    @access_mode = mode
 
     block_given?
     |> if_true do
-      File open : file_name access_mode do |f|
+      File open: file_name mode: mode do |f|
         yield f
       end
     end
@@ -85,15 +85,15 @@ File = Class new Stream do
   # File open "foo.txt" with:"r" do |f|
   #   Console puts : f readlines
   # end
-  self open = do |file_name with: access_mode = nil|
-    access_mode ||= "r"
+  self open = do |file_name mode=nil|
+    mode ||= "r"
     block_given? if_true do
       # trying method takes a block (between { and }).
       # this would also work: trying do ... end (same as in ruby).
       # in ruby: trying = begin.
       trying{
         # open file etc.
-        file = File new : IO base_file_open : file_name access_mode
+        file = File new: (IO base_file_open: file_name mode)
         # yield to block
         yield file
 
@@ -101,7 +101,7 @@ File = Class new Stream do
         # simply use catch method with a given block to execute
         # if the specified class (as the parameter) is caugth.
         catch IOError do |ex|
-          Console puts : "Error while trying to open file #{file_name} with access mode: #{access_mode}"
+          Console puts: "Error while trying to open file #{file_name} with access mode: #{mode}"
         end
 
         # Error is baseclass of all exceptions -> this will get called when all the others didn't match
@@ -158,6 +158,10 @@ Numerical = Module new do
   incr = { self += 1 }
   decr = { self -= 1 }
 
+  ++ = { self incr }
+
+  -- = { self decr }
+
   to = do |n|
     block_given? if_true {
       i = self
@@ -202,10 +206,17 @@ Boolean = Class new do
   }
 
   while_true = {
-    self if_true do
+    self if_true {
       yield
       self while_true
-    end
+    }
+  }
+
+  while_true = {
+    self if_false {
+      yield
+      self while_false
+    }
   }
 
 end

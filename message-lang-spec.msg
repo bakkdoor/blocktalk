@@ -24,9 +24,7 @@ end
 
 
 # creating a subclass of Object called Integer.
-# this is similar to smalltalks way of subclassing.
-#Object subclass: Integer do
-#Integer = Object subclass do
+# if no super class specified to constructor, Object is taken.
 Integer = Class new do
   # include Numerical module (as in ruby):
   include Numerical
@@ -61,7 +59,7 @@ Integer = Class new do
 end
 
 
-File = Stream subclass do
+File = Class new: Stream do
   # constructor that takes a file handle given by the operating system or so.
   new = do |file_handle|
     File new: (file_handle file_name) mode: (file_handle access_mode)

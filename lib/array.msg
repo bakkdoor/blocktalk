@@ -17,9 +17,9 @@ Array = Class new {
 
   peek = (last)
 
-  each = {
+  each = { |block|
     0 to: (self size) do |index|
-      yield (self at: index)
+      block call: (self at: index)
     end
   }
 

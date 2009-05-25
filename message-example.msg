@@ -15,15 +15,25 @@ end
 # ..
 # 0
 # to Console:
-10 to 0 do |i|
+10 to: 0 do |i|
   Console puts: i
 end
 
 # same again
 i = 0
-(i < 10) while_true do |i|
+(i < 10) while_true: do |i|
   Console puts: i
   i incr # increment i
   # or:
   i ++
 end
+
+
+numbers = [1,2,3,4,5] select: {|i| i < 3} # will return [1,2]
+numbers each: do |i|
+  puts i
+end
+
+(1 .. 100) each: {|i| Console puts: i}
+
+squares = (1 .. 100) collect: {|i| i * i}

@@ -1,8 +1,8 @@
 Enumerable = Module new {
-  collect = {
+  collect = { |block|
     arr = Array.new
-    self each do |x|
-      arr << (yield x)
+    self each: do |x|
+      arr << (block call: x)
     end
     arr
   }
@@ -10,20 +10,20 @@ Enumerable = Module new {
   map = (collect)
 
 
-  select = {
+  select = { |block|
     arr = Array new: (self size)
-    self each do |x|
-      (yield x) if_true do
+    self each: do |x|
+      (block call: x) if_true do
         arr << x
       end
     end
     arr
   }
 
-  reject = {
+  reject = { |block|
     arr = Array new: (self size)
     self each do |x|
-      (yield x) if_false do
+      (block call: x) if_false do
         arr << x
       end
     end

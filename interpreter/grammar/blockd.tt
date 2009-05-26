@@ -1,11 +1,13 @@
 grammar Blockd do
+  # starting point for the parser.
+  # a blockd programm consists of expressions & comments.
   rule blockd_programm do
     (expression / comment)*
   end
 
   # comments start with '#' and end at the end of a line, as in ruby
   rule comment do
-    '#' (!'\n' . )*
+    '#' (![\n] .)* [\n]?
   end
 
   # expressions start here

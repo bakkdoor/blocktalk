@@ -1,3 +1,8 @@
+# this is just for demonstration
+# there probably won't be the need to require the console module from the
+# standard library every time you want to print something to the screen ;)
+System require: "console"
+
 File open: "test.txt" mode: "w" do |f|
   f puts: "what's up, dog?!"
   f puts: "crazy shit, yo!"
@@ -13,7 +18,6 @@ i = 0
   Console puts: i
   i incr
 end
-
 
 numbers = [1,2,3,4,5] select: {|i| i < 3}
 numbers each: do |i|

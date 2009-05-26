@@ -1,5 +1,4 @@
-# require 'message-lang-spec.msg'
-require "message-lang-spec"
+System require: "message-lang-spec"
 
 File open: "test.txt" mode: "w" do |f|
   # write three lines to 'test.txt' and close afterwards (done in File#open)

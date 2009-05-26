@@ -8,22 +8,24 @@ grammar Blockd do
     '#' (!'\n' . )*
   end
 
+  # expressions start here
+
   # an expression is one of the following:
   # assignment, method_call, literal or subexpression
   rule expression do
-    assignment / method_call / literal / subexpression
+    (assignment / method_call / literal / subexpression) ws* newline?
   end
 
   # a subexpression is an expression surrounded by parenthesis for grouping.
   # e.g.: (gets to_i) + 3
   rule subexpression do
-    '(' whitespace* expression whitespace* ')'
+    '(' ws* expression ws* ')'
   end
 
   # an assignment typically looks like this:
   # identifier = value (value is either an (sub)expression, an identifier or a literal
   rule assignment do
-    identifier whitespace* '=' whitespace* (expression / subexpression / identifier / literal)
+    identifier ws* '=' ws* (expression / subexpression / identifier / literal)
   end
 
   # a method_call is characterized by a receiver, a message and optional parameters:
@@ -31,7 +33,7 @@ grammar Blockd do
   #       receiver message: param_value
   #       receiver message: param1_value param2: param2_value ...
   rule method_call do
-    receiver:(message_receiver) ' ' (message_with_params / message_without_params)
+    receiver:(message_receiver) ' ' (operator_message / message_with_params / message_without_params) (' ' passed_block:(block_literal))?
   end
 
   # a message receiver is one of the following:
@@ -45,20 +47,28 @@ grammar Blockd do
   # a message with parameters passed to it should look like this:
   # receiver message: param1_value param2: param2_value param3: param3_value etc.
   rule message_with_params do
-    message:(identifier) params:(message_params)
+    message:(message_name) params:(message_params)
   end
 
   # a message without parameters passed to it looks like this:
   # receiver message
   rule message_without_params do
-    message:(identifier) !message_params
+    message:(message_name) !message_params
+  end
+
+  rule operator_message do
+    operator:(operator) operator_param:(operator_param)
+  end
+
+  rule operator_param do
+    ' ' operator_param:(param_value)
   end
 
   # message parameters look like this:
   # first_param param2_name: param2_value param3_name: param3_value
   # but the additional parameters beyond the first one are optional.
   rule message_params do
-    first_param:(first_param) rest_params:(whitespace+ param)*
+    first_param:(first_param) rest_params:(ws+ param)*
   end
 
   # the first_param is the one that gets passed to a message in the first position.
@@ -90,15 +100,15 @@ grammar Blockd do
   end
 
   rule symbol_literal do
-    ':' (!':' identifier)
+    ':' symbol_name:(!':' identifier)
   end
 
   rule int_literal do
-    sign? non_zero_digit digit*
+    (sign? non_zero_digit digit*) / [0]
   end
 
   rule float_literal do
-    (sign? digit+ '.' digit+)
+    sign? digit+ '.' digit+
   end
 
   rule char_literal do
@@ -106,36 +116,68 @@ grammar Blockd do
   end
 
   rule array_literal do
-    '[' whitespace* (literal / identifier)? whitespace* rest_items:(',' whitespace* item:(literal / identifier))* whitespace* ']'
+    '[' ws* (literal / identifier)? ws* rest_items:(',' ws* item:(literal / identifier))* ws* ']'
   end
 
   rule hash_literal do
-    '{' whitespace* '}' /
-      '{' whitespace* hash_entry whitespace* rest_pairs:(',' whitespace* pair:(hash_entry))*  whitespace* '}'
+    '{' ws* '}' /
+      '{' ws* hash_entry ws* rest_pairs:(',' ws* pair:(hash_entry))*  ws* '}'
   end
 
   rule hash_entry do
-    (literal / identifier) whitespace* '=>' whitespace* (literal / identifier)
+    (literal / identifier) ws* '=>' ws* (literal / identifier)
   end
 
   rule block_literal do
-    ('{' whitespace* (!hash_entry block_params)* block_body:(expression)* whitespace* '}') /
-      (do_keyword whitespace* (!hash_entry block_params)* block_body:(expression)* whitespace* end_keyword)
+    ('{' ws* (!hash_entry ws* block_params ws*)* block_body ws* '}') /
+      (do_keyword ws* (!hash_entry ws* block_params ws*)* block_body ws* end_keyword)
+  end
+
+  rule block_body do
+    expression*
+  end
+
+  rule block_params do
+    '|' block_param+ '|'
+  end
+
+  rule block_param do
+    ws* identifier (ws*) / (ws+ identifier)
   end
 
 
   # other rules
 
   rule identifier do
-    ('@' / '@@')? [a-zA-Z]+ [a-zA-Z0-9_]* ('?' / '!')?
+    ('@' / '@@')? [a-zA-Z]+ [a-zA-Z0-9_]*
   end
 
-  rule whitespace do
-    ' ' / '\n' / '\t'
+  rule message_name do
+    [a-zA-Z]+ [a-zA-Z0-9_]* ('?' / '!' / '=')?
+  end
+
+  rule operator do
+    ['.', '+', '-', '/', '*', '|', '<', '>', '<=', '>=', '==', '!=' ,'+=', '-=', '&']+
+  end
+
+  rule ws do
+    [\n\s\t]+
+  end
+
+  rule spaces do
+    [\s\t]+
+  end
+
+  rule line_breaking_ws do
+    [\n\s\t]+
+  end
+
+  rule newline do
+    [\n]+
   end
 
   rule do_keyword do
-    'do' ![a-zA-Z0-9_]
+    'do' ![a-zA-Z0-9_] &ws
   end
 
   rule end_keyword do

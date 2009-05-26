@@ -1,0 +1,96 @@
+grammar Blockd
+  rule blockd_programm
+    (expression / comment)*
+  end
+
+
+  rule comment
+    '#' (!'\n' . )*
+  end
+
+  rule expression
+    assignment / method_call / literal / subexpression
+  end
+
+  rule subexpression
+    '(' whitespace* expression whitespace* ')'
+  end
+
+  rule assignment
+    identifier whitespace* '=' whitespace* (identifier / literal / expression / subexpression)
+  end
+
+  rule method_call
+    receiver:(message_receiver) ' ' message:(identifier) params:(first_param:(':' (literal / identifier))
+                                                                 rest_params:(whitespace+ param_name:(identifier ':')
+                                                                              param_value:(literal / identifier))*
+                                                                 )?
+  end
+
+  rule message_receiver
+    (literal / identifier) / ('(' whitespace* method_call whitespace* ')') / subexpression
+  end
+
+  # literals
+
+  rule literal
+    string_literal / symbol_literal / int_literal / float_literal / char_literal / array_literal / hash_literal / block_literal
+  end
+
+  rule string_literal
+    '"' (!'"' .)* '"'
+  end
+
+  rule symbol_literal
+    ':' (!':' identifier)
+  end
+
+  rule int_literal
+    [0-9]+
+  end
+
+  rule float_literal
+    ([0-9]* '.' [0-9]+) / ('.' [0-9]+)
+  end
+
+  rule char_literal
+    '?' [a-zA-Z0-9_]
+  end
+
+  rule array_literal
+    '[' whitespace* (literal / identifier)? whitespace* rest_items:(',' whitespace* item:(literal / identifier))* whitespace* ']'
+  end
+
+  rule hash_literal
+    '{' whitespace* '}' /
+      '{' whitespace* hash_entry whitespace* rest_pairs:(',' whitespace* pair:(hash_entry))*  whitespace* '}'
+  end
+
+  rule hash_entry
+    (literal / identifier) whitespace* '=>' whitespace* (literal / identifier)
+  end
+
+  rule block_literal
+    ('{' whitespace* (!hash_entry block_params)* block_body:(expression)* whitespace* '}') /
+      (do_keyword whitespace* (!hash_entry block_params)* block_body:(expression)* whitespace* end_keyword)
+  end
+
+
+  # other rules
+
+  rule identifier
+    ('@' / '@@')? [a-zA-Z]+ [a-zA-Z0-9_]* ('?' / '!')?
+  end
+
+  rule whitespace
+    ' ' / '\n' / '\t'
+  end
+
+  rule do_keyword
+    'do' ![a-zA-Z0-9_]
+  end
+
+  rule end_keyword
+    'end' ![a-zA-Z0-9_]
+  end
+end

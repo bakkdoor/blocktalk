@@ -13,7 +13,7 @@ grammar Blockd do
   # an expression is one of the following:
   # assignment, method_call, literal or subexpression
   rule expression do
-    (assignment / method_call / literal / subexpression) ws* newline?
+    (method_call / assignment / literal / subexpression) ws* newline?
   end
 
   # a subexpression is an expression surrounded by parenthesis for grouping.
@@ -57,11 +57,7 @@ grammar Blockd do
   end
 
   rule operator_message do
-    operator:(operator) operator_param:(operator_param)
-  end
-
-  rule operator_param do
-    ' ' operator_param:(param_value)
+    operator_name:(operator) ' ' param_value !message_params
   end
 
   # message parameters look like this:
@@ -157,7 +153,11 @@ grammar Blockd do
   end
 
   rule operator do
-    ['.', '+', '-', '/', '*', '|', '<', '>', '<=', '>=', '==', '!=' ,'+=', '-=', '&']+
+    ('=' operator_symbol+) / (operator_symbol '=' operator_symbol*) / operator_symbol+
+  end
+
+  rule operator_symbol do
+    ('<=' / '>='/ '<' / '>' / '==' / '!=' / '+=' / '-=' / '&' / '.' / '+' / '-' / '/' / '*' / '|')
   end
 
   rule ws do

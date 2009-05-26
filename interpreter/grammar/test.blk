@@ -1,0 +1,11 @@
+File open: "test.txt" mode: "w" do |f|
+  f puts: "what's up, dog?!"
+  f puts: "crazy shit, yo!"
+  f puts: "hahaha!!"
+end
+
+10 to: 0 do |i|
+  Console puts: i
+end
+
+(1 .. 100) collect: {|i| i * i})

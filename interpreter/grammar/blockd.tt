@@ -1,76 +1,76 @@
-grammar Blockd
-  rule blockd_programm
+grammar Blockd do
+  rule blockd_programm do
     (expression / comment)*
   end
 
 
-  rule comment
+  rule comment do
     '#' (!'\n' . )*
   end
 
-  rule expression
+  rule expression do
     assignment / method_call / literal / subexpression
   end
 
-  rule subexpression
+  rule subexpression do
     '(' whitespace* expression whitespace* ')'
   end
 
-  rule assignment
-    identifier whitespace* '=' whitespace* (identifier / literal / expression / subexpression)
+  rule assignment do
+    identifier whitespace* '=' whitespace* (expression / subexpression / identifier / literal)
   end
 
-  rule method_call
+  rule method_call do
     receiver:(message_receiver) ' ' message:(identifier) params:(first_param:(':' (literal / identifier))
                                                                  rest_params:(whitespace+ param_name:(identifier ':')
                                                                               param_value:(literal / identifier))*
                                                                  )?
   end
 
-  rule message_receiver
+  rule message_receiver do
     (literal / identifier) / ('(' whitespace* method_call whitespace* ')') / subexpression
   end
 
   # literals
 
-  rule literal
+  rule literal do
     string_literal / symbol_literal / int_literal / float_literal / char_literal / array_literal / hash_literal / block_literal
   end
 
-  rule string_literal
+  rule string_literal do
     '"' (!'"' .)* '"'
   end
 
-  rule symbol_literal
+  rule symbol_literal do
     ':' (!':' identifier)
   end
 
-  rule int_literal
+  rule int_literal do
     [0-9]+
   end
 
-  rule float_literal
+  rule float_literal do
     ([0-9]* '.' [0-9]+) / ('.' [0-9]+)
   end
 
-  rule char_literal
+  rule char_literal do
     '?' [a-zA-Z0-9_]
   end
 
-  rule array_literal
+  rule array_literal do
     '[' whitespace* (literal / identifier)? whitespace* rest_items:(',' whitespace* item:(literal / identifier))* whitespace* ']'
   end
 
-  rule hash_literal
+  rule hash_literal do
     '{' whitespace* '}' /
       '{' whitespace* hash_entry whitespace* rest_pairs:(',' whitespace* pair:(hash_entry))*  whitespace* '}'
   end
 
-  rule hash_entry
+  rule hash_entry do
     (literal / identifier) whitespace* '=>' whitespace* (literal / identifier)
   end
 
-  rule block_literal
+  rule block_literal do
     ('{' whitespace* (!hash_entry block_params)* block_body:(expression)* whitespace* '}') /
       (do_keyword whitespace* (!hash_entry block_params)* block_body:(expression)* whitespace* end_keyword)
   end
@@ -78,19 +78,19 @@ grammar Blockd
 
   # other rules
 
-  rule identifier
+  rule identifier do
     ('@' / '@@')? [a-zA-Z]+ [a-zA-Z0-9_]* ('?' / '!')?
   end
 
-  rule whitespace
+  rule whitespace do
     ' ' / '\n' / '\t'
   end
 
-  rule do_keyword
+  rule do_keyword do
     'do' ![a-zA-Z0-9_]
   end
 
-  rule end_keyword
+  rule end_keyword do
     'end' ![a-zA-Z0-9_]
   end
 end

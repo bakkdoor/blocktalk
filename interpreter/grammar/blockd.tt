@@ -3,32 +3,80 @@ grammar Blockd do
     (expression / comment)*
   end
 
-
+  # comments start with '#' and end at the end of a line, as in ruby
   rule comment do
     '#' (!'\n' . )*
   end
 
+  # an expression is one of the following:
+  # assignment, method_call, literal or subexpression
   rule expression do
     assignment / method_call / literal / subexpression
   end
 
+  # a subexpression is an expression surrounded by parenthesis for grouping.
+  # e.g.: (gets to_i) + 3
   rule subexpression do
     '(' whitespace* expression whitespace* ')'
   end
 
+  # an assignment typically looks like this:
+  # identifier = value (value is either an (sub)expression, an identifier or a literal
   rule assignment do
     identifier whitespace* '=' whitespace* (expression / subexpression / identifier / literal)
   end
 
+  # a method_call is characterized by a receiver, a message and optional parameters:
+  # e.g.: receiver message
+  #       receiver message: param_value
+  #       receiver message: param1_value param2: param2_value ...
   rule method_call do
-    receiver:(message_receiver) ' ' message:(identifier) params:(first_param:(':' (literal / identifier))
-                                                                 rest_params:(whitespace+ param_name:(identifier ':')
-                                                                              param_value:(literal / identifier))*
-                                                                 )?
+    receiver:(message_receiver) ' ' (message_with_params / message_without_params)
   end
 
+  # a message receiver is one of the following:
+  # - message_without_params, e.g.: "42" to_i to_f # -> 42.0
+  # - literals, e.g. 123, 123.456, [1,2,3], {:a => 1, :b => 2}, "hello world", ?C etc.
+  # subexpressions, e.g. (3 + 4), ("foo" to_sym) etc.
   rule message_receiver do
-    (literal / identifier) / ('(' whitespace* method_call whitespace* ')') / subexpression
+    message_without_params / (literal / identifier) / subexpression
+  end
+
+  # a message with parameters passed to it should look like this:
+  # receiver message: param1_value param2: param2_value param3: param3_value etc.
+  rule message_with_params do
+    message:(identifier) params:(message_params)
+  end
+
+  # a message without parameters passed to it looks like this:
+  # receiver message
+  rule message_without_params do
+    message:(identifier) !message_params
+  end
+
+  # message parameters look like this:
+  # first_param param2_name: param2_value param3_name: param3_value
+  # but the additional parameters beyond the first one are optional.
+  rule message_params do
+    first_param:(first_param) rest_params:(whitespace+ param)*
+  end
+
+  # the first_param is the one that gets passed to a message in the first position.
+  # it's param_name is the message_name, so to speak.
+  rule first_param do
+    ':' ' ' first_param_value:(param_value)
+  end
+
+  rule param do
+    param_name ' ' param_value:(param_value)
+  end
+
+  rule param_name do
+    identifier ':'
+  end
+
+  rule param_value do
+    literal / identifier / subexpression
   end
 
   # literals
@@ -46,11 +94,11 @@ grammar Blockd do
   end
 
   rule int_literal do
-    [0-9]+
+    sign? non_zero_digit digit*
   end
 
   rule float_literal do
-    ([0-9]* '.' [0-9]+) / ('.' [0-9]+)
+    (sign? digit+ '.' digit+)
   end
 
   rule char_literal do
@@ -92,5 +140,17 @@ grammar Blockd do
 
   rule end_keyword do
     'end' ![a-zA-Z0-9_]
+  end
+
+  rule non_zero_digit do
+    [1-9]
+  end
+
+  rule digit do
+    [0-9]
+  end
+
+  rule sign do
+    ('+' / '-')
   end
 end

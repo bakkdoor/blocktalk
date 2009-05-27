@@ -15,7 +15,12 @@ grammar Blockd do
   # an expression is one of the following:
   # assignment, method_call, literal or subexpression
   rule expression do
-    (method_call / assignment / literal / subexpression) ws* newline?
+    ((return_statement / method_call / assignment / literal / subexpression) ws* newline?) #/
+ #     (identifier &newline)
+  end
+
+  rule return_statement do
+    ('return' ' ' (expression / identifier))
   end
 
   # a subexpression is an expression surrounded by parenthesis for grouping.
@@ -132,7 +137,7 @@ grammar Blockd do
   end
 
   rule block_body do
-    expression*
+    expression+
   end
 
   rule block_params do

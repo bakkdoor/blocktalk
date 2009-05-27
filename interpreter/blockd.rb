@@ -31,5 +31,6 @@ ast = parser.parse IO.read(parse_file)
 #   PP.pp e
 #   puts ""
 #end
-
+#puts ast.elements.inspect
+i = 0
 ast.value

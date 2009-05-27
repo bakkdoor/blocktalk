@@ -57,7 +57,7 @@ grammar Blockd do
   # a message with parameters passed to it should look like this:
   # receiver message: param1_value param2: param2_value param3: param3_value etc.
   rule message_with_params do
-    message:(message_name) params:(message_params)
+    message:(message_name) params:(message_params) <MessageWithParamsNode>
   end
 
   # a message without parameters passed to it looks like this:
@@ -74,25 +74,49 @@ grammar Blockd do
   # first_param param2_name: param2_value param3_name: param3_value
   # but the additional parameters beyond the first one are optional.
   rule message_params do
-    first_param:(first_param) rest_params:(ws+ param)*
+    first_param:(first_param) rest_params:(' ' parameter:param)* {
+      def value
+        [first_param] + rest_params.elements.map do |space_and_param|
+          space_and_param.parameter.value
+        end
+      end
+    }
   end
 
   # the first_param is the one that gets passed to a message in the first position.
   # it's param_name is the message_name, so to speak.
   rule first_param do
-    ':' ' ' first_param_value:(param_value)
+    ':' ' ' first_param_value:(param_value) {
+      def value
+        first_param_value.value
+      end
+    }
   end
 
   rule param do
-    param_name ' ' param_value:(param_value)
+    param_name ' ' param_value:(param_value) {
+      def value
+        #puts param_name.value
+        #puts param_value.value
+        [param_name.value, param_value.value]
+      end
+    }
   end
 
   rule param_name do
-    identifier ':'
+    identifier ':' {
+      def value
+        identifier.value
+      end
+    }
   end
 
   rule param_value do
-    literal / identifier / subexpression
+    literal <ParamValueNode>
+    /
+    identifier <ParamValueNode>
+    /
+    subexpression <ParamValueNode>
   end
 
   # literals
@@ -159,7 +183,11 @@ grammar Blockd do
   end
 
   rule message_name do
-    [a-zA-Z]+ [a-zA-Z0-9_]* ('?' / '!' / '=')?
+    [a-zA-Z]+ [a-zA-Z0-9_]* ('?' / '!' / '=')? {
+      def value
+        self.text_value
+      end
+    }
   end
 
   rule operator do

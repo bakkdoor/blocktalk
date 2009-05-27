@@ -1,6 +1,6 @@
 module Blockd
   class CommentNode < Treetop::Runtime::SyntaxNode
-    def eval
+    def value
       nil
     end
   end

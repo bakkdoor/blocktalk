@@ -2,7 +2,7 @@ grammar Blockd do
   # starting point for the parser.
   # a blockd programm consists of expressions & comments.
   rule blockd_programm do
-    (expression / comment)* <RootNode>
+    ws* exprs:(expression)* ws* <RootNode>
   end
 
   # comments start with '#' and end at the end of a line, as in ruby
@@ -15,12 +15,12 @@ grammar Blockd do
   # an expression is one of the following:
   # assignment, method_call, literal or subexpression
   rule expression do
-    ((return_statement / method_call / assignment / literal / subexpression) ws* newline?) #/
-    #     (identifier &newline)
+    (subexpr:(return_statement / method_call / assignment / literal / subexpression / comment) ws* newline?) <ExpressionNode> #/
+      #     (identifier &newline)
   end
 
   rule return_statement do
-    ('return' ' ' (expression / identifier))
+    ('return' ' ' (expression / identifier)) <ReturnNode>
   end
 
   # a subexpression is an expression surrounded by parenthesis for grouping.
@@ -40,7 +40,10 @@ grammar Blockd do
   #       receiver message: param_value
   #       receiver message: param1_value param2: param2_value ...
   rule method_call do
-    receiver:(message_receiver) ' ' (operator_message / message_with_params / message_without_params) (' ' passed_block:(block_literal))?
+    receiver:(message_receiver) ' '
+    message:(operator_message / message_with_params / message_without_params)
+    (' ' passed_block:(block_literal))?
+    <MethodcallNode>
   end
 
   # a message receiver is one of the following:
@@ -48,7 +51,7 @@ grammar Blockd do
   # - literals, e.g. 123, 123.456, [1,2,3], {:a => 1, :b => 2}, "hello world", ?C etc.
   # subexpressions, e.g. (3 + 4), ("foo" to_sym) etc.
   rule message_receiver do
-    message_without_params / (literal / identifier) / subexpression
+    (literal / identifier) / subexpression / message_without_params
   end
 
   # a message with parameters passed to it should look like this:
@@ -60,7 +63,7 @@ grammar Blockd do
   # a message without parameters passed to it looks like this:
   # receiver message
   rule message_without_params do
-    message:(message_name) !message_params
+    message:(message_name) !message_params <MessageWithoutParamsNode>
   end
 
   rule operator_message do
@@ -107,7 +110,7 @@ grammar Blockd do
   end
 
   rule int_literal do
-    (sign? non_zero_digit digit*) / [0]
+    (sign? non_zero_digit digit*) / [0] <IntegerLiteralNode>
   end
 
   rule float_literal do
@@ -152,7 +155,7 @@ grammar Blockd do
   # other rules
 
   rule identifier do
-    ('@' / '@@')? [a-zA-Z]+ [a-zA-Z0-9_]*
+    ('@' / '@@')? [a-zA-Z]+ [a-zA-Z0-9_]* <IdentifierNode>
   end
 
   rule message_name do

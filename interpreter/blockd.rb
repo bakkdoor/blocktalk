@@ -10,10 +10,7 @@ require "lib/core"
 require "pp"
 
 # parser nodes
-require "parser/nodes/root"
-require "parser/nodes/comment"
-require "parser/nodes/assignment"
-
+Dir.glob("parser/nodes/*.rb").each{ |f| require f }
 
 # load grammar
 Treetop.load "grammar/blockd.tt"
@@ -30,7 +27,9 @@ ast = parser.parse IO.read(parse_file)
 #PP.pp ast
 
 #PP.pp ast.elements.select{|e| e.is_a?(Blockd::AssignmentNode)}
-ast.elements.each do |e|
-  PP.pp e
-  puts ""
-end
+# ast.elements.each do |e|
+#   PP.pp e
+#   puts ""
+#end
+
+ast.value

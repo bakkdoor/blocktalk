@@ -1,7 +1,8 @@
 module Blockd
   class AssignmentNode < Treetop::Runtime::SyntaxNode
-    def eval
-      STDERR.puts "=================> assignment: #{target.textvalue}  = #{value.textvalue}"
+    def value
+      puts "in assignmentnode#value"
+      Kernel::eval "#{target.value} = #{value.subexpr.value}"
     end
   end
 end

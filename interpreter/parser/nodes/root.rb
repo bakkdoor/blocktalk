@@ -1,7 +1,7 @@
 module Blockd
   class RootNode < Treetop::Runtime::SyntaxNode
-    def eval
-      nil
+    def value
+      self.exprs.elements.each{|expr| expr.elements[0].value }
     end
   end
 end

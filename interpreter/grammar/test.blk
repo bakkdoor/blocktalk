@@ -3,6 +3,7 @@
 # standard library every time you want to print something to the screen ;)
 System require: "console"
 
+# we support ruby-style blocks with do ... end and curly braces { ... }
 File open: "test.txt" mode: "w" do |f|
   f puts: "what's up, dog?!"
   f puts: "crazy shit, yo!"
@@ -29,3 +30,14 @@ end
 squares = (1 .. 100) collect: {|i| i * i}
 
 
+# define a square method
+square = { |x|
+  x * x
+}
+
+# or like this:
+abs = { |num|
+  (num + 0) if_true do
+    return num
+  end
+}

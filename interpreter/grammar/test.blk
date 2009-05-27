@@ -37,7 +37,9 @@ square = { |x|
 
 # or like this:
 abs = { |num|
-  (num + 0) if_true do
+  (num > 0) if_true {
     return num
-  end
+  }
+
+  num * -1
 }

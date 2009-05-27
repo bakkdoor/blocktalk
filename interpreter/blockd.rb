@@ -8,15 +8,29 @@ $: << File.expand_path(File.dirname(__FILE__))
 
 require "lib/core"
 require "pp"
-#require "grammar/blockd.tt" # this will get loaded with treetop to generate the BlockdParser
 
+# parser nodes
+require "parser/nodes/root"
+require "parser/nodes/comment"
+require "parser/nodes/assignment"
+
+
+# load grammar
 Treetop.load "grammar/blockd.tt"
+
 
 if ARGV.size < 1
   raise "Error: Please specify a source file to interpret."
 end
 
+
 parse_file = ARGV[0]
 parser = BlockdParser.new
 ast = parser.parse IO.read(parse_file)
-PP.pp ast
+#PP.pp ast
+
+#PP.pp ast.elements.select{|e| e.is_a?(Blockd::AssignmentNode)}
+ast.elements.each do |e|
+  PP.pp e
+  puts ""
+end

@@ -13,11 +13,15 @@ require "evaluator"
 # parser nodes
 Dir.glob("parser/nodes/*.rb").each{ |f| require f }
 
-# load grammar
-Treetop.load "grammar/blockd.tt"
+parser_dynamic = ARGV.include?("--dynparser")
 
-#require "grammar/blockd"
-
+if parser_dynamic
+  # load & generate parser from grammar dynamically
+  Treetop.load "grammar/blockd.tt"
+else
+  # load pregenerated parser (faster)
+  require "grammar/blockd"
+end
 
 if ARGV.size < 1
   raise "Error: Please specify a source file to interpret."

@@ -125,7 +125,7 @@ grammar Blockd do
   # literals
 
   rule literal do
-    string_literal / symbol_literal / int_literal / float_literal / char_literal / array_literal / hash_literal / block_literal
+    string_literal / symbol_literal / float_literal /int_literal / char_literal / array_literal / hash_literal / block_literal
   end
 
   rule string_literal do

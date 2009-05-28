@@ -1,5 +1,9 @@
 module Blockd
   class RootNode < Treetop::Runtime::SyntaxNode
+    def evaluate
+      self.value
+    end
+
     def value
       self.exprs.elements.each do |e|
         if e.elements[0].respond_to?(:value)

@@ -116,9 +116,9 @@ grammar Blockd do
   rule param_value do
     literal
     /
-    identifier <ParamValueNode>
+    identifier
     /
-    subexpression <ParamValueNode>
+    subexpression
   end
 
   # literals

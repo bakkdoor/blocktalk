@@ -1,9 +1,10 @@
 module Blockd
   class MessageWithoutParamsNode < Treetop::Runtime::SyntaxNode
     def value
-      puts "in messagewithoutparamsnode#value"
-      puts
-      puts message.text_value
+      {
+        :message => message.value,
+        :params => []
+      }
     end
   end
 end

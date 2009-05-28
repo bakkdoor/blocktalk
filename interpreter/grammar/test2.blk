@@ -1,3 +1,9 @@
-#i = 0
-#Console puts: i# with: 4
-Console puts: ((6 + 4) / 5)
+System require: "rubygems"
+
+i = (3 + 4)
+Console puts: i
+str = "hello, world"
+Console puts: str
+
+sym = (("blaa_krass" to_sym) inspect)
+Console puts: sym

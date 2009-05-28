@@ -26,15 +26,15 @@ grammar Blockd do
   # a subexpression is an expression surrounded by parenthesis for grouping.
   # e.g.: (gets to_i) + 3
   rule subexpression do
-    '(' ws* expression ws* ')'
+    '(' ws* subexpr:expression ws* ')' <ExpressionNode>
   end
 
   # an assignment typically looks like this:
   # identifier = value (value is either an (sub)expression, an identifier or a literal
   rule assignment do
-    target:(identifier) ws* '=' ws* val:(expression / subexpression / identifier / literal) { #<AssignmentNode>
+    target:(identifier) ws* '=' ws* val:(expression / identifier / literal) { #<AssignmentNode>
       def value
-        Evaluator.add "#{target.value} = #{val.subexpr.value}"
+        "#{target.value} = #{val.subexpr.value}"
       end
     }
   end
@@ -71,7 +71,7 @@ grammar Blockd do
   end
 
   rule operator_message do
-    operator_name:(operator) ' ' param_value !message_params
+    operator_name:(operator) ' ' param_value !message_params <OperatorMessageNode>
   end
 
   # message parameters look like this:
@@ -100,8 +100,6 @@ grammar Blockd do
   rule param do
     param_name ' ' param_value:(param_value) {
       def value
-        #puts param_name.value
-        #puts param_value.value
         [param_name.value, param_value.value]
       end
     }
@@ -116,7 +114,7 @@ grammar Blockd do
   end
 
   rule param_value do
-    literal <ParamValueNode>
+    literal
     /
     identifier <ParamValueNode>
     /
@@ -130,7 +128,11 @@ grammar Blockd do
   end
 
   rule string_literal do
-    '"' (!'"' .)* '"'
+    '"' (!'"' .)* '"' {
+      def value
+        self.text_value
+      end
+    }
   end
 
   rule symbol_literal do
@@ -146,15 +148,31 @@ grammar Blockd do
   end
 
   rule float_literal do
-    sign? digit+ '.' digit+
+    sign? digit+ '.' digit+ {
+    def value
+      self.text_value.to_f
+    end
+  }
   end
 
   rule char_literal do
-    '?' [a-zA-Z0-9_]
+    '?' val:[a-zA-Z0-9_] {
+    def value
+      val.each_byte{|b| b}
+    end
+  }
   end
 
   rule array_literal do
-    '[' ws* (literal / identifier)? ws* rest_items:(',' ws* item:(literal / identifier))* ws* ']'
+    '[' ws* first_item:(literal / identifier)? ws* rest_items:(',' ws* item:(literal / identifier))* ws* ']' {
+        def value
+          if self.text_value == "[]"
+            []
+          else
+            [first_item.value] + rest_items.collect{ |ws_and_items| ws_and_items.item.value }
+          end
+        end
+      }
   end
 
   rule hash_literal do
@@ -163,7 +181,7 @@ grammar Blockd do
   end
 
   rule hash_entry do
-    (literal / identifier) ws* '=>' ws* (literal / identifier)
+    key:(literal / identifier) ws* '=>' ws* value:(literal / identifier)
   end
 
   rule block_literal do
@@ -199,7 +217,11 @@ grammar Blockd do
   end
 
   rule operator do
-    ('=' operator_symbol+) / (operator_symbol '=' operator_symbol*) / operator_symbol+
+    ('=' operator_symbol+) / (operator_symbol '=' operator_symbol*) / operator_symbol+ {
+      def value
+        self.text_value
+      end
+    }
   end
 
   rule operator_symbol do

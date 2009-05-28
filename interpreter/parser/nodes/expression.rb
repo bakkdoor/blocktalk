@@ -1,8 +1,7 @@
 module Blockd
   class ExpressionNode < Treetop::Runtime::SyntaxNode
-    def eval
-      puts "in expressionnode#eval"
-      self.subexpr.eval
+    def value
+      subexpr.elements[0].value
     end
   end
 end

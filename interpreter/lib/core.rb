@@ -3,3 +3,4 @@ $: << File.expand_path(File.dirname(__FILE__))
 
 require "kernel/codeblock"
 require "kernel/console"
+require "kernel/system"

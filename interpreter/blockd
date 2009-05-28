@@ -16,6 +16,8 @@ Dir.glob("parser/nodes/*.rb").each{ |f| require f }
 # load grammar
 Treetop.load "grammar/blockd.tt"
 
+#require "grammar/blockd"
+
 
 if ARGV.size < 1
   raise "Error: Please specify a source file to interpret."
@@ -25,18 +27,12 @@ end
 parse_file = ARGV[0]
 parser = BlockdParser.new
 ast = parser.parse IO.read(parse_file)
-#PP.pp ast
 
-#PP.pp ast.elements.select{|e| e.is_a?(Blockd::AssignmentNode)}
-# ast.elements.each do |e|
-#   PP.pp e
-#   puts ""
-#end
-#puts ast.elements.inspect
-i = 0
-ast.value
+# start evaluation process
+ast.evaluate
 
 debug_on =  ARGV.include?("--debug")
+ruby_output = ARGV.include?("--ruby")
 
 if debug_on
   puts ast.inspect
@@ -48,8 +44,14 @@ if debug_on
   puts "\n============================================================\n\n"
 end
 
-Evaluator.eval
 
-if debug_on
-  puts
+if ruby_output
+  Evaluator.inspect
+else
+  Evaluator.eval
+
+  if debug_on
+    puts
+  end
 end
+

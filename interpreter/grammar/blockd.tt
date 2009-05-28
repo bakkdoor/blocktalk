@@ -80,7 +80,7 @@ grammar Blockd do
   rule message_params do
     first_param:(first_param) rest_params:(' ' parameter:param)* {
       def value
-        [first_param.value(message_name)] + rest_params.elements.map do |space_and_param|
+        [first_param.value] + rest_params.elements.map do |space_and_param|
           space_and_param.parameter.value
         end
       end

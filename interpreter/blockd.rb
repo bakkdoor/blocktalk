@@ -8,6 +8,7 @@ $: << File.expand_path(File.dirname(__FILE__))
 
 require "lib/core"
 require "pp"
+require "evaluator"
 
 # parser nodes
 Dir.glob("parser/nodes/*.rb").each{ |f| require f }
@@ -34,3 +35,14 @@ ast = parser.parse IO.read(parse_file)
 #puts ast.elements.inspect
 i = 0
 ast.value
+
+debug_on =  ARGV.include?("--debug")
+
+if debug_on
+  puts ast.inspect
+  puts "\n--------------------\n"
+  Evaluator.inspect
+  puts "\n--------------------\n\n"
+end
+
+Evaluator.eval

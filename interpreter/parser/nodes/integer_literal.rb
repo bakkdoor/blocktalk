@@ -1,6 +1,6 @@
 module Blockd
   class IntegerLiteralNode < Treetop::Runtime::SyntaxNode
-    def eval
+    def value
       self.text_value.to_i
     end
   end

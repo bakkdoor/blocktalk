@@ -8,7 +8,8 @@ module Blockd
 
       eval_str = "#{receiver.value}.#{message}("
       eval_str += "#{params.join(', ')})"
-      Kernel::eval eval_str
+      #      Kernel::eval eval_str
+      Evaluator.add eval_str
     end
   end
 end

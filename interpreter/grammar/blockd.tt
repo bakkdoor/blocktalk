@@ -32,7 +32,11 @@ grammar Blockd do
   # an assignment typically looks like this:
   # identifier = value (value is either an (sub)expression, an identifier or a literal
   rule assignment do
-    target:(identifier) ws* '=' ws* value:(expression / subexpression / identifier / literal) <AssignmentNode>
+    target:(identifier) ws* '=' ws* val:(expression / subexpression / identifier / literal) { #<AssignmentNode>
+      def value
+        Evaluator.add "#{target.value} = #{val.subexpr.value}"
+      end
+    }
   end
 
   # a method_call is characterized by a receiver, a message and optional parameters:
@@ -130,11 +134,15 @@ grammar Blockd do
   end
 
   rule symbol_literal do
-    ':' symbol_name:(!':' identifier)
+    ':' symbol_name:(!':' identifier) {
+      def value
+        (':' + symbol_name.text_value).to_sym
+      end
+    }
   end
 
   rule int_literal do
-    (sign? non_zero_digit digit*) / [0] <IntegerLiteralNode>
+    sign? non_zero_digit digit* <IntegerLiteralNode> / [0] <IntegerLiteralNode>
   end
 
   rule float_literal do

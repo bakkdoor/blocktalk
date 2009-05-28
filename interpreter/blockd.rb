@@ -40,9 +40,16 @@ debug_on =  ARGV.include?("--debug")
 
 if debug_on
   puts ast.inspect
-  puts "\n--------------------\n"
+  puts "\n============================================================\n\n"
+  puts "--------------------\n"
+  puts "Generated Ruby code:\n"
+  puts "--------------------\n\n"
   Evaluator.inspect
-  puts "\n--------------------\n\n"
+  puts "\n============================================================\n\n"
 end
 
 Evaluator.eval
+
+if debug_on
+  puts
+end

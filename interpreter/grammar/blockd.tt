@@ -20,7 +20,7 @@ grammar Blockd do
   end
 
   rule return_statement do
-    ('return' ' ' (expression / identifier)) <ReturnNode>
+    ('return' ' ' ret_val:(expression / identifier)) <ReturnNode>
   end
 
   # a subexpression is an expression surrounded by parenthesis for grouping.
@@ -32,7 +32,7 @@ grammar Blockd do
   # an assignment typically looks like this:
   # identifier = value (value is either an (sub)expression, an identifier or a literal
   rule assignment do
-    target:(identifier) ws* '=' ws* val:(expression / identifier / literal) { #<AssignmentNode>
+    target:(identifier) ws* '=' ws* val:(expression / identifier / literal) {
       def value
         "#{target.value} = #{val.subexpr.value}"
       end
@@ -80,7 +80,7 @@ grammar Blockd do
   rule message_params do
     first_param:(first_param) rest_params:(' ' parameter:param)* {
       def value
-        [first_param] + rest_params.elements.map do |space_and_param|
+        [first_param.value(message_name)] + rest_params.elements.map do |space_and_param|
           space_and_param.parameter.value
         end
       end
@@ -92,7 +92,7 @@ grammar Blockd do
   rule first_param do
     ':' ' ' first_param_value:(param_value) {
       def value
-        first_param_value.value
+        first_param_value
       end
     }
   end
@@ -100,7 +100,8 @@ grammar Blockd do
   rule param do
     param_name ' ' param_value:(param_value) {
       def value
-        [param_name.value, param_value.value]
+        #[param_name.value, param_value.value]
+        param_value
       end
     }
   end
@@ -148,7 +149,8 @@ grammar Blockd do
   end
 
   rule float_literal do
-    sign? digit+ '.' digit+ {
+    sign? digit+ '.' digit+
+  {
     def value
       self.text_value.to_f
     end
@@ -166,39 +168,97 @@ grammar Blockd do
   rule array_literal do
     '[' ws* first_item:(literal / identifier)? ws* rest_items:(',' ws* item:(literal / identifier))* ws* ']' {
         def value
-          if self.text_value == "[]"
-            []
+          if self.text_value =~ /\[\s*\]/
+            "[]"
           else
-            [first_item.value] + rest_items.collect{ |ws_and_items| ws_and_items.item.value }
+            #[first_item.value] + rest_items.elements.collect{ |ws_and_items| ws_and_items.item.value }
+            array_str = "[#{first_item.value},"
+            rest_items.elements.each do |ws_and_items|
+              array_str += "#{ws_and_items.item.value},"
+            end
+            array_str += "]"
+            return array_str
           end
         end
       }
-  end
+    end
 
   rule hash_literal do
-    '{' ws* '}' /
-      '{' ws* hash_entry ws* rest_pairs:(',' ws* pair:(hash_entry))*  ws* '}'
+    # '{' ws* '}' /
+    '{' ws* first_entry:(hash_entry)? ws* rest_pairs:(',' ws* pair:(hash_entry))*  ws* '}' {
+      def value
+        if self.text_value =~ /\{\s*\}/
+          return "{}"
+        else
+          hash_str = "{"
+          first_pair = first_entry.value
+          hash_str += "#{first_pair[0]} => #{first_pair[1]},"
+          rest_pairs.elements.each do |ws_and_pair|
+            pair = ws_and_pair.pair
+            hash_str += "#{pair[0]} => #{pair[1]},"
+          end
+          hash_str += "}"
+
+          return hash_str
+        end
+      end
+    }
   end
 
   rule hash_entry do
-    key:(literal / identifier) ws* '=>' ws* value:(literal / identifier)
+    key:(literal / identifier) ws* '=>' ws* val:(literal / identifier) {
+      def value
+        [key.value, val.value]
+      end
+    }
   end
 
   rule block_literal do
-    ('{' ws* (!hash_entry ws* block_params ws*)* block_body ws* '}') /
-      (do_keyword ws* (!hash_entry ws* block_params ws*)* block_body ws* end_keyword)
+    (block_literal_do_end / block_literal_curly_braces)
+  end
+
+  rule block_literal_do_end do
+    do_keyword ws* !hash_entry ws* params:(block_params)? ws*
+      body:(block_body) ws*
+    end_keyword
+    <BlockLiteralNode>
+
+  end
+
+  rule block_literal_curly_braces do
+    '{' ws* !hash_entry ws* params:(block_params)? ws*
+      body:(block_body) ws*
+    '}'
+    <BlockLiteralNode>
   end
 
   rule block_body do
-    expression+
+    ws* exprs:(expression)+ ws* {
+      def value
+        body_str = ""
+        body_str += exprs.elements.collect{|e| e.elements[0].value}.join(";")
+        return body_str
+      end
+    }
   end
 
   rule block_params do
-    '|' block_param+ '|'
+    '|' params:(block_param)+ '|' {
+      def value
+        block_param_str = "|"
+        block_param_str += params.elements.collect{|param| param.value}.join(",")
+        block_param_str += "| "
+        return block_param_str
+      end
+    }
   end
 
   rule block_param do
-    ws* identifier (ws*) / (ws+ identifier)
+    (ws* param_name:(identifier) (ws*) / (ws+ param_name:(identifier))) {
+      def value
+        param_name.value
+      end
+    }
   end
 
 

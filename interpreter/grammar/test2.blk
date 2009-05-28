@@ -1,9 +1,14 @@
-System require: "rubygems"
+y = { |x|
+  Console puts: x
+  Console puts: (x * x)
+}
 
-i = (3 + 4)
-Console puts: i
-str = "hello, world"
-Console puts: str
+y call: 10
 
-sym = (("blaa_krass" to_sym) inspect)
-Console puts: sym
+
+m = { |x y|
+
+  Console puts: ((x upcase) * y)
+}
+
+m call: "cool " y: 5

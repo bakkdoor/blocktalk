@@ -132,7 +132,7 @@ Numerical = Module new do
     |> if_false { self * -1 }
   }
 
-  ** = |power| {
+  ** = { |power|
     ((abs power) == 0) if_true { return 1 }
 
     return self * (self ** (power - 1))

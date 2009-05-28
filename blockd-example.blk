@@ -24,13 +24,13 @@ i = 0
   Console puts: i
   i incr # increment i
   # or:
-  i ++
+  #i ++
 end
 
 
 numbers = [1,2,3,4,5] select: {|i| i < 3} # will return [1,2]
 numbers each: do |i|
-  puts i
+  Console puts: i
 end
 
 (1 .. 100) each: {|i| Console puts: i}

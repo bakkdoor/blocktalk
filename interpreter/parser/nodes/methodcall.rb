@@ -6,8 +6,8 @@ module Blockd
       message = message_hash[:message]
       params = message_hash[:params].collect{|p| p.value}
 
-      eval_str = "#{receiver.value}.#{message} "
-      eval_str += "#{params.join(', ')}"
+      eval_str = "#{receiver.value}.#{message}("
+      eval_str += "#{params.join(', ')})"
       Kernel::eval eval_str
     end
   end

@@ -1,0 +1,3 @@
+#i = 0
+#Console puts: i# with: 4
+Console puts: ((6 + 4) / 5)

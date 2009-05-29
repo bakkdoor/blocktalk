@@ -46,7 +46,7 @@ grammar Blockd do
   rule method_call do
     receiver:(message_receiver) ' '
     message:(operator_message / message_with_params / message_without_params) ' '?
-    passed_block:(block_literal_do_end / block_literal_curly_braces)?
+    passed_block:(block_literal_do_end / block_literal_curly_braces / '&' block_var_name:identifier)?
     <MethodcallNode>
   end
 

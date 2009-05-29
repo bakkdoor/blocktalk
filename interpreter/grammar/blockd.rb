@@ -488,6 +488,12 @@ module Blockd
   end
 
   module MethodCall0
+    def block_var_name
+      elements[1]
+    end
+  end
+
+  module MethodCall1
     def receiver
       elements[0]
     end
@@ -565,8 +571,32 @@ module Blockd
               if r12
                 r10 = r12
               else
-                self.index = i10
-                r10 = nil
+                i13, s13 = index, []
+                if input.index('&', index) == index
+                  r14 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                  @index += 1
+                else
+                  terminal_parse_failure('&')
+                  r14 = nil
+                end
+                s13 << r14
+                if r14
+                  r15 = _nt_identifier
+                  s13 << r15
+                end
+                if s13.last
+                  r13 = instantiate_node(SyntaxNode,input, i13...index, s13)
+                  r13.extend(MethodCall0)
+                else
+                  self.index = i13
+                  r13 = nil
+                end
+                if r13
+                  r10 = r13
+                else
+                  self.index = i10
+                  r10 = nil
+                end
               end
             end
             if r10
@@ -581,7 +611,7 @@ module Blockd
     end
     if s0.last
       r0 = instantiate_node(MethodcallNode,input, i0...index, s0)
-      r0.extend(MethodCall0)
+      r0.extend(MethodCall1)
     else
       self.index = i0
       r0 = nil

@@ -41,3 +41,5 @@ foo = {
 Console puts: "--"
 
 foo call
+
+10 times &foo

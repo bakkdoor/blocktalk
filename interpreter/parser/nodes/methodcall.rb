@@ -13,6 +13,13 @@ module Blockd
           eval_str += ", "
         end
         eval_str += "&" + passed_block.value
+      elsif passed_block.text_value =~ /&\S+/
+        # check for Proc-Objects passed to method as block
+        if params.size > 0
+          eval_str += ", "
+        end
+        eval_str += "&"
+        eval_str += passed_block.block_var_name.value
       end
 
       eval_str += ")"

@@ -25,7 +25,7 @@ end
 
 # creating a subclass of Object called Integer.
 # if no super class specified to constructor, Object is taken.
-Integer = Class new do
+Class in: Integer do
   # include Numerical module (as in ruby):
   include Numerical
 
@@ -59,7 +59,7 @@ Integer = Class new do
 end
 
 
-File = Class new: Stream do
+Class in: File deriving: Stream do
   # constructor that takes a file handle given by the operating system or so.
   new = do |file_handle|
     File new: (file_handle file_name) mode: (file_handle access_mode)
@@ -124,7 +124,7 @@ end
 
 # Numerical - Module.
 # Holds some basic mathematical messages that can be used by different numerical types.
-Numerical = Module new do
+Module in: Numerical do
 
   abs = {
     (self > 0)
@@ -187,7 +187,7 @@ end
 
 
 
-Boolean = Class new do
+Class in: Boolean do
 
   if_true = {
     # check (via some core routine in the vm) if self == true.
@@ -218,3 +218,15 @@ Boolean = Class new do
   }
 
 end
+
+
+Module in: MyModule {
+  self some_static_method = do |param1 and: param2|
+    return "bla_blubb"
+  end
+}
+
+
+Class in: Foo deriving: [Bar] {
+  self mixin: [Enumerable, Weirdo]
+}

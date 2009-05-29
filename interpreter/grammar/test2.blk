@@ -11,4 +11,21 @@ m = { |x y|
   Console puts: ((x upcase) * y)
 }
 
-m call: "cool " y: 5
+m call: "cool " y: 100
+
+square = { |y|
+  y * y
+}
+
+cubic = {|x| (x * x) * x}
+
+#y call: -9.343
+
+Console puts: y
+
+
+Foo = (Class new)
+
+3 times do |i|
+  Console puts: i
+end

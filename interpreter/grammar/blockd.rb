@@ -488,12 +488,6 @@ module Blockd
   end
 
   module MethodCall0
-    def passed_block
-      elements[1]
-    end
-  end
-
-  module MethodCall1
     def receiver
       elements[0]
     end
@@ -502,6 +496,9 @@ module Blockd
       elements[2]
     end
 
+    def passed_block
+      elements[4]
+    end
   end
 
   def _nt_method_call
@@ -545,24 +542,11 @@ module Blockd
         end
         s0 << r3
         if r3
-          i8, s8 = index, []
           if input.index(' ', index) == index
-            r9 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
             terminal_parse_failure(' ')
-            r9 = nil
-          end
-          s8 << r9
-          if r9
-            r10 = _nt_block_literal
-            s8 << r10
-          end
-          if s8.last
-            r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
-            r8.extend(MethodCall0)
-          else
-            self.index = i8
             r8 = nil
           end
           if r8
@@ -571,12 +555,33 @@ module Blockd
             r7 = instantiate_node(SyntaxNode,input, index...index)
           end
           s0 << r7
+          if r7
+            i10 = index
+            r11 = _nt_block_literal_do_end
+            if r11
+              r10 = r11
+            else
+              r12 = _nt_block_literal_curly_braces
+              if r12
+                r10 = r12
+              else
+                self.index = i10
+                r10 = nil
+              end
+            end
+            if r10
+              r9 = r10
+            else
+              r9 = instantiate_node(SyntaxNode,input, index...index)
+            end
+            s0 << r9
+          end
         end
       end
     end
     if s0.last
       r0 = instantiate_node(MethodcallNode,input, i0...index, s0)
-      r0.extend(MethodCall1)
+      r0.extend(MethodCall0)
     else
       self.index = i0
       r0 = nil

@@ -1,0 +1,9 @@
+i = (Kernel gets)
+
+Console puts: i
+
+((i to_i) < 10) if_true: {
+  Console puts: "i < 10!"
+} if_false: {
+  Console puts: "i > 10!!"
+}

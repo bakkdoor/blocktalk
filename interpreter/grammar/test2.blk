@@ -25,7 +25,7 @@ obj = c new
 obj foo: (10 to_s)
 
 # new class Foo
-Class in: :Foo deriving: Object do
+Class >> :Foo do
   def bar = do |x|
     Console puts: ("in Foo#bar: " + (x to_s))
   end
@@ -46,7 +46,12 @@ end
 foo bazz
 
 
-Class in: :MyArray deriving: Array do
+# define new class called MyArray, derived from Array
+# this is equivalent to:
+# Class in: MyArray deriving: Array ...
+# just less typing :)
+
+Class >> {:MyArray => Array} do
   def crazy_ouput = do
     self each { |x|
        Console puts: ("craaaaaazy: " + (x to_s))
@@ -93,6 +98,14 @@ myarr my_each: { |elem|
   Console puts: ("my_each: " + (elem to_s))
 }
 
-File open: "grammar/test2.blk" mode: "r" do |f|
-  Console puts: (f readlines)
+# File open: "grammar/test2.blk" mode: "r" do |f|
+#   Console puts: (f readlines)
+# end
+
+Class >> :MyClass do
+  def funky = do |name|
+    Console puts: ("in MyClass#funky with name=" + name)
+  end
 end
+
+(MyClass new) funky: "christopher"

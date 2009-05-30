@@ -1,16 +1,16 @@
-Enumerable = Module new {
-  collect = { |block|
-    arr = Array.new
+Module >> :Enumerable {
+  def collect = { |block|
+    arr = Array new
     self each: do |x|
       arr << (block call: x)
     end
     arr
   }
 
-  map = (collect)
+  def map = (collect)
 
 
-  select = { |block|
+  def select = { |block|
     arr = Array new: (self size)
     self each: do |x|
       (block call: x) if_true do
@@ -20,7 +20,7 @@ Enumerable = Module new {
     arr
   }
 
-  reject = { |block|
+  def reject = { |block|
     arr = Array new: (self size)
     self each do |x|
       (block call: x) if_false do
@@ -30,7 +30,7 @@ Enumerable = Module new {
     arr
   }
 
-  inject = { |initial=nil|
+  def inject = { |initial=nil|
     (initial nil?)
     |> if_true do
 
@@ -41,5 +41,5 @@ Enumerable = Module new {
     end
   }
 
-  empty? = { (self size) == 0 }
+  def empty? = { (self size) == 0 }
 }

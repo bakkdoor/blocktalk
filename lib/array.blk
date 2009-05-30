@@ -1,12 +1,12 @@
-Array = Class new {
-  << = { |element|
+Class >> :Array {
+  def << = { |element|
     # do some stuff here to add element to array at end
   }
 
-  push = (<<)
-  add = (<<)
+  def push = (<<)
+  def add = (<<)
 
-  pop = {
+  def pop = {
     # top-of-stack (tos) = last element in array.
     tos = last
     #self remove: tos
@@ -15,9 +15,9 @@ Array = Class new {
     tos
   }
 
-  peek = (last)
+  def peek = (last)
 
-  each = { |block|
+  def each = { |block|
     0 to: (self size) do |index|
       block call: (self at: index)
     end

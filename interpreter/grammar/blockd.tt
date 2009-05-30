@@ -28,7 +28,7 @@ grammar Blockd do
   end
 
   rule return_statement do
-    ('return' ' ' ret_val:(expression / identifier)) <ReturnNode>
+    'return' ' ' ret_val:(subexpression / identifier) <ReturnNode>
   end
 
   # a subexpression is an expression surrounded by parenthesis for grouping.

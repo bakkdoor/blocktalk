@@ -526,7 +526,7 @@ module Blockd
       s0 << r2
       if r2
         i3 = index
-        r4 = _nt_expression
+        r4 = _nt_subexpression
         if r4
           r3 = r4
         else
@@ -542,7 +542,7 @@ module Blockd
       end
     end
     if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0 = instantiate_node(ReturnNode,input, i0...index, s0)
       r0.extend(ReturnStatement0)
     else
       self.index = i0

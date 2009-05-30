@@ -13,7 +13,7 @@ Console puts: (self foo: 10)
     Console puts: x
 }
 
-
+# anonymous class
 c = Class new {
   def foo = do |x|
       Console puts: ("in foo: " + x)
@@ -24,7 +24,7 @@ obj = c new
 
 obj foo: (10 to_s)
 
-
+# new class Foo
 Class in: :Foo deriving: Object do
   def bar = do |x|
     Console puts: ("in Foo#bar: " + (x to_s))
@@ -34,8 +34,9 @@ end
 foo = Foo new
 foo bar: "hello, world"
 
-
-Class in: :Foo do
+# extending Foo class
+#Class in: :Foo do
+Foo extend do
   def bazz = do
     Console puts: "in Foo#bazz!°!!"
     self bar: "so cool!!"
@@ -51,12 +52,28 @@ Class in: :MyArray deriving: Array do
        Console puts: ("craaaaaazy: " + (x to_s))
     }
   end
+
+  def take_n = do |amount|
+    i = 0
+    arr = []
+    {i < amount} while_true {
+      arr << (self at: i)
+      i = (i + 1)
+    }
+
+    return arr
+  end
 end
 
 myarr = MyArray new
 myarr << 10
 myarr << 100
+myarr << 1000
+myarr << 10000
+myarr << 100000
 
 myarr crazy_ouput
 
 Console puts: (myarr class)
+
+Console puts: ((myarr take_n: 3) inspect)

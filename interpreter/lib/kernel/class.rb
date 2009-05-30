@@ -15,4 +15,8 @@ class Class
       end
     end
   end
+
+  def extend(&block)
+    self.class_eval(&block)
+  end
 end

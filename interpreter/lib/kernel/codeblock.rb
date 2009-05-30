@@ -44,5 +44,21 @@ module Kernel
         nil
       end
     end
+
+    def while_true(&block)
+      while self.call
+        block.call
+      end
+    end
+
+    def while_false(&block)
+      while not self.call
+        block.call
+      end
+    end
+
+    def until(&block)
+      self.while_false(&block)
+    end
   end
 end

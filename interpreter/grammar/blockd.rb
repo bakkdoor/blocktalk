@@ -2352,10 +2352,11 @@ module Blockd
 
   module BlockParams1
     def value
-      block_param_str = "|"
-      block_param_str += params.elements.collect{|param| param.value}.join(",")
-      block_param_str += "| "
-      return block_param_str
+#        block_param_str = "|"
+#        block_param_str += params.elements.collect{|param| param.value}.join(",")
+#        block_param_str += "| "
+#        return block_param_str
+      params.elements.collect{|param| param.value}
     end
   end
 
@@ -2419,8 +2420,8 @@ module Blockd
   end
 
   module BlockParam0
-    def param_name
-      elements[1]
+    def identifier
+      elements[0]
     end
 
   end
@@ -2429,11 +2430,30 @@ module Blockd
     def param_name
       elements[1]
     end
+
+    def param_name_val
+      elements[2]
+    end
+
   end
 
   module BlockParam2
+    def param_name_val
+      elements[1]
+    end
+  end
+
+  module BlockParam3
     def value
-      param_name.value
+      # holds param name (if given) with param value (the identifier in the body of the block)
+      name_identifier_pair = {}
+      if param_name.text_value =~ /\S+\:/
+        # return the param-name as a symbol (start with a colon)
+        # without the final colon, since it's not part of the name
+        name_identifier_pair[:name] = ":#{param_name.text_value[0..-2]}"
+      end
+      name_identifier_pair[:identifier] = param_name_val.value
+      return name_identifier_pair
     end
   end
 
@@ -2459,64 +2479,92 @@ module Blockd
     r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
     s1 << r2
     if r2
-      r4 = _nt_identifier
+      i5, s5 = index, []
+      r6 = _nt_identifier
+      s5 << r6
+      if r6
+        if input.index(':', index) == index
+          r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure(':')
+          r7 = nil
+        end
+        s5 << r7
+      end
+      if s5.last
+        r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+        r5.extend(BlockParam0)
+      else
+        self.index = i5
+        r5 = nil
+      end
+      if r5
+        r4 = r5
+      else
+        r4 = instantiate_node(SyntaxNode,input, index...index)
+      end
       s1 << r4
       if r4
-        s5, i5 = [], index
-        loop do
-          r6 = _nt_ws
-          if r6
-            s5 << r6
-          else
-            break
+        r8 = _nt_identifier
+        s1 << r8
+        if r8
+          s9, i9 = [], index
+          loop do
+            r10 = _nt_ws
+            if r10
+              s9 << r10
+            else
+              break
+            end
           end
+          r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
+          s1 << r9
         end
-        r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
-        s1 << r5
       end
     end
     if s1.last
       r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
-      r1.extend(BlockParam0)
+      r1.extend(BlockParam1)
     else
       self.index = i1
       r1 = nil
     end
     if r1
       r0 = r1
-      r0.extend(BlockParam2)
+      r0.extend(BlockParam3)
     else
-      i7, s7 = index, []
-      s8, i8 = [], index
+      i11, s11 = index, []
+      s12, i12 = [], index
       loop do
-        r9 = _nt_ws
-        if r9
-          s8 << r9
+        r13 = _nt_ws
+        if r13
+          s12 << r13
         else
           break
         end
       end
-      if s8.empty?
-        self.index = i8
-        r8 = nil
+      if s12.empty?
+        self.index = i12
+        r12 = nil
       else
-        r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+        r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
       end
-      s7 << r8
-      if r8
-        r10 = _nt_identifier
-        s7 << r10
+      s11 << r12
+      if r12
+        r14 = _nt_identifier
+        s11 << r14
       end
-      if s7.last
-        r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-        r7.extend(BlockParam1)
+      if s11.last
+        r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
+        r11.extend(BlockParam2)
       else
-        self.index = i7
-        r7 = nil
+        self.index = i11
+        r11 = nil
       end
-      if r7
-        r0 = r7
-        r0.extend(BlockParam2)
+      if r11
+        r0 = r11
+        r0.extend(BlockParam3)
       else
         self.index = i0
         r0 = nil

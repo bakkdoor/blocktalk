@@ -31,7 +31,7 @@ Class in: Integer do
 
   # operators are simply methods / messages that a class can define however it wants.
   # in this case, the * operator is defined to be a message with one parameter (y).
-  * = do |y|
+  def * = do |y|
 
     # |> is a special operator that allows the last expression in a line above this one to be used
     # as the argument to a method call.
@@ -61,12 +61,12 @@ end
 
 Class in: File deriving: Stream do
   # constructor that takes a file handle given by the operating system or so.
-  new = do |file_handle|
+  def new = do |file_handle|
     File new: (file_handle file_name) mode: (file_handle access_mode)
   end
 
   # constructor to File class
-  new = do |file_name mode|
+  def new = do |file_name mode|
     @file_name = file_name
     @access_mode = mode
 
@@ -126,41 +126,41 @@ end
 # Holds some basic mathematical messages that can be used by different numerical types.
 Module in: Numerical do
 
-  abs = {
+  def abs = {
     (self > 0)
     |> if_true { self }
     |> if_false { self * -1 }
   }
 
-  ** = { |power|
+  def ** = { |power|
     ((abs power) == 0) if_true { return 1 }
 
     return self * (self ** (power - 1))
   }
 
-  expt = (**) # define expt to be the same as **
+  def expt = (**) # define expt to be the same as **
 
-  - = {
+  def - = {
     self * -1
   }
 
-  negate = (-)
+  def negate = (-)
 
-  fac = {
+  def fac = {
     (self <= 1) if_true { return 1 }
     self * ((self - 1) fac)
   }
 
   # maybe some more ...
 
-  incr = { self += 1 }
-  decr = { self -= 1 }
+  def incr = { self += 1 }
+  def decr = { self -= 1 }
 
-  ++ = { self incr }
+  def ++ = { self incr }
 
-  -- = { self decr }
+  def -- = { self decr }
 
-  to = do |n|
+  def to = do |n|
     block_given? if_true {
       i = self
       msg = (incr)
@@ -176,7 +176,7 @@ Module in: Numerical do
     }
   end
 
-  times = {
+  def times = {
     i = self
     (i > 0) while_true {
       i decr
@@ -189,7 +189,7 @@ end
 
 Class in: Boolean do
 
-  if_true = {
+  def if_true = {
     # check (via some core routine in the vm) if self == true.
     # if so: yield to block.
     # finally, return self for easy chaining.
@@ -197,20 +197,20 @@ Class in: Boolean do
     self
   }
 
-  if_false = {
+  def if_false = {
     # similar to if_true, but only yield, if self == false.
     yield
     self
   }
 
-  while_true = {
+  def while_true = {
     self if_true {
       yield
       self while_true
     }
   }
 
-  while_true = {
+  def while_true = {
     self if_false {
       yield
       self while_false
@@ -221,7 +221,7 @@ end
 
 
 Module in: MyModule {
-  self some_static_method = do |param1 and: param2|
+  def self some_static_method = do |param1 and: param2|
     return "bla_blubb"
   end
 }

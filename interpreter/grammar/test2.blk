@@ -1,78 +1,62 @@
-y = { |x|
-  Console puts: x
-  Console puts: (x * x)
-}
-
-y call: 10
-
-
-m = { |x y|
-
-  Console puts: ((x upcase) * y)
-}
-
-m call: "cool " y: 10
-
-square = { |y|
-  y * y
-}
-
-cubic = {|x| (x * x) * x}
-
-#y call: -9.343
-
-Console puts: y
-
-
-Foo =
-  (Class new {
-     3 + 4
-   })
-
-3 times do |i|
-  Console puts: i
+def foo = do |x|
+  Console puts ("bkzubb: " + (x to_s))
 end
 
+def bar = do
+  100
+end
 
-foo = {
-  3 times { |i| Console puts: (square call: i) }
+Console puts: (self foo: 10)
+
+
+[1,2,3] each { |x|
+    Console puts: x
 }
 
-Console puts: "--"
 
-foo call
-
-10 times &foo
-
-harr = { |arg1:a arg2:b arg3:c|
-  Console puts: "testing named args:"
-  Console puts: ("arg1: " + a)
-  Console puts: ("arg2: " + b)
-  Console puts: ("arg3: " + c)
+c = Class new {
+  def foo = do |x|
+      Console puts: ("in foo: " + x)
+  end
 }
 
-harr call: "hello, world" arg2: "krazy" arg3: "yooo"
+obj = c new
 
-times = do |num do:block|
-    i = 0
-    { i < num } while_true {
-      block call: i
-      i = (i + 1)
+obj foo: (10 to_s)
+
+
+Class in: :Foo deriving: Object do
+  def bar = do |x|
+    Console puts: ("in Foo#bar: " + (x to_s))
+  end
+end
+
+foo = Foo new
+foo bar: "hello, world"
+
+
+Class in: :Foo do
+  def bazz = do
+    Console puts: "in Foo#bazz!°!!"
+    self bar: "so cool!!"
+  end
+end
+
+foo bazz
+
+
+Class in: :MyArray deriving: Array do
+  def crazy_ouput = do
+    self each { |x|
+       Console puts: ("craaaaaazy: " + (x to_s))
     }
+  end
 end
 
-times call: 10 do: { |x| Console puts: ("zahl: " + (x to_s))}
+myarr = MyArray new
+myarr << 10
+myarr << 100
 
-i = 0
+myarr crazy_ouput
 
-{i < 10000} while_true {
-      Console puts: i
-      i = (i + 1)
-}
-
-i = 0
-{i == 100} until {
-      Console print: "."
-      i = (i + 1)
-}
-Console puts
+Console puts: (myarr class)

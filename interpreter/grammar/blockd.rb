@@ -182,32 +182,37 @@ module Blockd
 
     i0, s0 = index, []
     i1 = index
-    r2 = _nt_return_statement
+    r2 = _nt_method_definition
     if r2
       r1 = r2
     else
-      r3 = _nt_method_call
+      r3 = _nt_return_statement
       if r3
         r1 = r3
       else
-        r4 = _nt_assignment
+        r4 = _nt_method_call
         if r4
           r1 = r4
         else
-          r5 = _nt_literal
+          r5 = _nt_assignment
           if r5
             r1 = r5
           else
-            r6 = _nt_subexpression
+            r6 = _nt_literal
             if r6
               r1 = r6
             else
-              r7 = _nt_comment
+              r7 = _nt_subexpression
               if r7
                 r1 = r7
               else
-                self.index = i1
-                r1 = nil
+                r8 = _nt_comment
+                if r8
+                  r1 = r8
+                else
+                  self.index = i1
+                  r1 = nil
+                end
               end
             end
           end
@@ -216,25 +221,25 @@ module Blockd
     end
     s0 << r1
     if r1
-      s8, i8 = [], index
+      s9, i9 = [], index
       loop do
-        r9 = _nt_ws
-        if r9
-          s8 << r9
+        r10 = _nt_ws
+        if r10
+          s9 << r10
         else
           break
         end
       end
-      r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
-      s0 << r8
-      if r8
-        r11 = _nt_newline
-        if r11
-          r10 = r11
+      r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
+      s0 << r9
+      if r9
+        r12 = _nt_newline
+        if r12
+          r11 = r12
         else
-          r10 = instantiate_node(SyntaxNode,input, index...index)
+          r11 = instantiate_node(SyntaxNode,input, index...index)
         end
-        s0 << r10
+        s0 << r11
       end
     end
     if s0.last
@@ -246,6 +251,243 @@ module Blockd
     end
 
     node_cache[:expression][start_index] = r0
+
+    return r0
+  end
+
+  module MethodDefinition0
+    def method_name
+      elements[3]
+    end
+
+    def method_body
+      elements[7]
+    end
+  end
+
+  module MethodDefinition1
+    def method_name
+      elements[4]
+    end
+
+    def method_body
+      elements[8]
+    end
+  end
+
+  def _nt_method_definition
+    start_index = index
+    if node_cache[:method_definition].has_key?(index)
+      cached = node_cache[:method_definition][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0 = index
+    i1, s1 = index, []
+    s2, i2 = [], index
+    loop do
+      r3 = _nt_spaces
+      if r3
+        s2 << r3
+      else
+        break
+      end
+    end
+    r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+    s1 << r2
+    if r2
+      if input.index('def', index) == index
+        r4 = instantiate_node(SyntaxNode,input, index...(index + 3))
+        @index += 3
+      else
+        terminal_parse_failure('def')
+        r4 = nil
+      end
+      s1 << r4
+      if r4
+        s5, i5 = [], index
+        loop do
+          r6 = _nt_spaces
+          if r6
+            s5 << r6
+          else
+            break
+          end
+        end
+        if s5.empty?
+          self.index = i5
+          r5 = nil
+        else
+          r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+        end
+        s1 << r5
+        if r5
+          r7 = _nt_identifier
+          s1 << r7
+          if r7
+            s8, i8 = [], index
+            loop do
+              r9 = _nt_ws
+              if r9
+                s8 << r9
+              else
+                break
+              end
+            end
+            r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+            s1 << r8
+            if r8
+              if input.index('=', index) == index
+                r10 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                @index += 1
+              else
+                terminal_parse_failure('=')
+                r10 = nil
+              end
+              s1 << r10
+              if r10
+                s11, i11 = [], index
+                loop do
+                  r12 = _nt_ws
+                  if r12
+                    s11 << r12
+                  else
+                    break
+                  end
+                end
+                r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
+                s1 << r11
+                if r11
+                  r13 = _nt_block_literal
+                  s1 << r13
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+    if s1.last
+      r1 = instantiate_node(MethodDefinitionNode,input, i1...index, s1)
+      r1.extend(MethodDefinition0)
+    else
+      self.index = i1
+      r1 = nil
+    end
+    if r1
+      r0 = r1
+    else
+      i14, s14 = index, []
+      s15, i15 = [], index
+      loop do
+        r16 = _nt_spaces
+        if r16
+          s15 << r16
+        else
+          break
+        end
+      end
+      r15 = instantiate_node(SyntaxNode,input, i15...index, s15)
+      s14 << r15
+      if r15
+        if input.index('def', index) == index
+          r17 = instantiate_node(SyntaxNode,input, index...(index + 3))
+          @index += 3
+        else
+          terminal_parse_failure('def')
+          r17 = nil
+        end
+        s14 << r17
+        if r17
+          s18, i18 = [], index
+          loop do
+            r19 = _nt_spaces
+            if r19
+              s18 << r19
+            else
+              break
+            end
+          end
+          if s18.empty?
+            self.index = i18
+            r18 = nil
+          else
+            r18 = instantiate_node(SyntaxNode,input, i18...index, s18)
+          end
+          s14 << r18
+          if r18
+            if input.index('self ', index) == index
+              r20 = instantiate_node(SyntaxNode,input, index...(index + 5))
+              @index += 5
+            else
+              terminal_parse_failure('self ')
+              r20 = nil
+            end
+            s14 << r20
+            if r20
+              r21 = _nt_identifier
+              s14 << r21
+              if r21
+                s22, i22 = [], index
+                loop do
+                  r23 = _nt_ws
+                  if r23
+                    s22 << r23
+                  else
+                    break
+                  end
+                end
+                r22 = instantiate_node(SyntaxNode,input, i22...index, s22)
+                s14 << r22
+                if r22
+                  if input.index('=', index) == index
+                    r24 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                    @index += 1
+                  else
+                    terminal_parse_failure('=')
+                    r24 = nil
+                  end
+                  s14 << r24
+                  if r24
+                    s25, i25 = [], index
+                    loop do
+                      r26 = _nt_ws
+                      if r26
+                        s25 << r26
+                      else
+                        break
+                      end
+                    end
+                    r25 = instantiate_node(SyntaxNode,input, i25...index, s25)
+                    s14 << r25
+                    if r25
+                      r27 = _nt_block_literal
+                      s14 << r27
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+      if s14.last
+        r14 = instantiate_node(ClassMethodDefinitionNode,input, i14...index, s14)
+        r14.extend(MethodDefinition1)
+      else
+        self.index = i14
+        r14 = nil
+      end
+      if r14
+        r0 = r14
+      else
+        self.index = i0
+        r0 = nil
+      end
+    end
+
+    node_cache[:method_definition][start_index] = r0
 
     return r0
   end

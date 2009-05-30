@@ -15,8 +15,16 @@ grammar Blockd do
   # an expression is one of the following:
   # assignment, method_call, literal or subexpression
   rule expression do
-    (subexpr:(return_statement / method_call / assignment / literal / subexpression / comment) ws* newline?) <ExpressionNode> #/
-      #     (identifier &newline)
+    (subexpr:(method_definition / return_statement / method_call / assignment / literal / subexpression / comment) ws* newline?)
+    <ExpressionNode>
+  end
+
+  rule method_definition do
+    spaces* 'def' spaces+ method_name:(identifier) ws* '=' ws* method_body:(block_literal)
+    <MethodDefinitionNode>
+      /
+    spaces* 'def' spaces+  'self ' method_name:(identifier) ws* '=' ws* method_body:(block_literal)
+    <ClassMethodDefinitionNode>
   end
 
   rule return_statement do

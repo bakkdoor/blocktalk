@@ -61,7 +61,17 @@ Class in: :MyArray deriving: Array do
       i = (i + 1)
     }
 
-    return arr
+    return: arr
+  end
+
+  # my_each takes a codeblock as an explicit argument
+  def my_each = do |block|
+    i = 0
+    {i < (self size)} while_true {
+      curr_item = (self at: i)
+      block call: curr_item
+      i = (i + 1)
+    }
   end
 end
 
@@ -77,3 +87,12 @@ myarr crazy_ouput
 Console puts: (myarr class)
 
 Console puts: ((myarr take_n: 3) inspect)
+
+
+myarr my_each: { |elem|
+  Console puts: ("my_each: " + (elem to_s))
+}
+
+File open: "grammar/test2.blk" mode: "r" do |f|
+  Console puts: (f readlines)
+end

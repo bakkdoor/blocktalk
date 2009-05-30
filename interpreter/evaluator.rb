@@ -5,10 +5,10 @@ class Evaluator
   end
 
   def self.eval
-    Kernel::eval @expressions.join("\n")
+    Kernel::eval @expressions.select{|e| not (e.nil? or e.empty?)}.join("\n")
   end
 
   def self.inspect
-    Kernel::puts @expressions.join("\n")
+    Kernel::puts @expressions.select{|e| not (e.nil? or e.empty?)}.join("\n")
   end
 end

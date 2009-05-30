@@ -166,6 +166,9 @@ module Blockd
   end
 
   module Expression0
+  end
+
+  module Expression1
     def subexpr
       elements[0]
     end
@@ -190,28 +193,33 @@ module Blockd
       if r3
         r1 = r3
       else
-        r4 = _nt_method_call
+        r4 = _nt_yield_statement
         if r4
           r1 = r4
         else
-          r5 = _nt_assignment
+          r5 = _nt_method_call
           if r5
             r1 = r5
           else
-            r6 = _nt_literal
+            r6 = _nt_assignment
             if r6
               r1 = r6
             else
-              r7 = _nt_subexpression
+              r7 = _nt_literal
               if r7
                 r1 = r7
               else
-                r8 = _nt_comment
+                r8 = _nt_subexpression
                 if r8
                   r1 = r8
                 else
-                  self.index = i1
-                  r1 = nil
+                  r9 = _nt_comment
+                  if r9
+                    r1 = r9
+                  else
+                    self.index = i1
+                    r1 = nil
+                  end
                 end
               end
             end
@@ -221,30 +229,57 @@ module Blockd
     end
     s0 << r1
     if r1
-      s9, i9 = [], index
-      loop do
-        r10 = _nt_ws
-        if r10
-          s9 << r10
-        else
-          break
-        end
+      i10 = index
+      if input.index('$', index) == index
+        r11 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure('$')
+        r11 = nil
       end
-      r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
-      s0 << r9
-      if r9
-        r12 = _nt_newline
+      if r11
+        r10 = r11
+      else
+        i12, s12 = index, []
+        s13, i13 = [], index
+        loop do
+          r14 = _nt_ws
+          if r14
+            s13 << r14
+          else
+            break
+          end
+        end
+        r13 = instantiate_node(SyntaxNode,input, i13...index, s13)
+        s12 << r13
+        if r13
+          r16 = _nt_newline
+          if r16
+            r15 = r16
+          else
+            r15 = instantiate_node(SyntaxNode,input, index...index)
+          end
+          s12 << r15
+        end
+        if s12.last
+          r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
+          r12.extend(Expression0)
+        else
+          self.index = i12
+          r12 = nil
+        end
         if r12
-          r11 = r12
+          r10 = r12
         else
-          r11 = instantiate_node(SyntaxNode,input, index...index)
+          self.index = i10
+          r10 = nil
         end
-        s0 << r11
       end
+      s0 << r10
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Expression0)
+      r0.extend(Expression1)
     else
       self.index = i0
       r0 = nil
@@ -494,7 +529,7 @@ module Blockd
 
   module ReturnStatement0
     def ret_val
-      elements[2]
+      elements[3]
     end
   end
 
@@ -516,29 +551,44 @@ module Blockd
     end
     s0 << r1
     if r1
-      if input.index(' ', index) == index
-        r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
+      if input.index(':', index) == index
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
-        terminal_parse_failure(' ')
-        r2 = nil
+        terminal_parse_failure(':')
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
       end
       s0 << r2
       if r2
-        i3 = index
-        r4 = _nt_subexpression
-        if r4
-          r3 = r4
+        if input.index(' ', index) == index
+          r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
         else
-          r5 = _nt_identifier
-          if r5
-            r3 = r5
-          else
-            self.index = i3
-            r3 = nil
-          end
+          terminal_parse_failure(' ')
+          r4 = nil
         end
-        s0 << r3
+        s0 << r4
+        if r4
+          i5 = index
+          r6 = _nt_subexpression
+          if r6
+            r5 = r6
+          else
+            r7 = _nt_identifier
+            if r7
+              r5 = r7
+            else
+              self.index = i5
+              r5 = nil
+            end
+          end
+          s0 << r5
+        end
       end
     end
     if s0.last
@@ -550,6 +600,71 @@ module Blockd
     end
 
     node_cache[:return_statement][start_index] = r0
+
+    return r0
+  end
+
+  module YieldStatement0
+    def yieldval
+      elements[3]
+    end
+  end
+
+  def _nt_yield_statement
+    start_index = index
+    if node_cache[:yield_statement].has_key?(index)
+      cached = node_cache[:yield_statement][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('yield', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 5))
+      @index += 5
+    else
+      terminal_parse_failure('yield')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      if input.index(':', index) == index
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure(':')
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
+      end
+      s0 << r2
+      if r2
+        if input.index(' ', index) == index
+          r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure(' ')
+          r4 = nil
+        end
+        s0 << r4
+        if r4
+          r5 = _nt_array_literal
+          s0 << r5
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(YieldNode,input, i0...index, s0)
+      r0.extend(YieldStatement0)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:yield_statement][start_index] = r0
 
     return r0
   end

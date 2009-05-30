@@ -1,9 +1,17 @@
 module Kernel
   class Codeblock < Proc
+
+    def self.register(codeblock_identifier)
+      @@identifiers ||= []
+      if codeblock_identifier
+        @@identifiers << codeblock_identifier
+      end
+    end
+
     attr_reader :params, :block
 
-    def initialize(params, &block)
-      if params.size != (block.arity - 1)
+    def initialize(params = [], &block)
+      if params.size > 0 && (params.size != block.arity)
         raise "Error: Codeblock's arity doesn't match given argument list."
       else
         super(&block)
@@ -22,7 +30,11 @@ module Kernel
           calling_args[pos] = val
         end
       end
-      super(*([args.first] + calling_args))
+      if calling_args.size > 0
+        super(*([args.first] + calling_args))
+      else
+        super(*args)
+      end
     end
 
     def param_pos(param_name)

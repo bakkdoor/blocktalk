@@ -43,3 +43,12 @@ Console puts: "--"
 foo call
 
 10 times &foo
+
+harr = { |arg1:a arg2:b arg3:c|
+  Console puts: "testing named args:"
+  Console puts: ("arg1: " + a)
+  Console puts: ("arg2: " + b)
+  Console puts: ("arg3: " + c)
+}
+
+harr call: "hello, world" arg2: "krazy" arg3: "yooo"

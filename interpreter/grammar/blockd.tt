@@ -245,18 +245,27 @@ grammar Blockd do
   rule block_params do
     '|' params:(block_param)+ '|' {
       def value
-        block_param_str = "|"
-        block_param_str += params.elements.collect{|param| param.value}.join(",")
-        block_param_str += "| "
-        return block_param_str
+#        block_param_str = "|"
+#        block_param_str += params.elements.collect{|param| param.value}.join(",")
+#        block_param_str += "| "
+#        return block_param_str
+        params.elements.collect{|param| param.value}
       end
     }
   end
 
   rule block_param do
-    (ws* param_name:(identifier) (ws*) / (ws+ param_name:(identifier))) {
+    (ws* param_name:(identifier ':')? param_name_val:(identifier) (ws*) / (ws+ param_name_val:(identifier))) {
       def value
-        param_name.value
+        # holds param name (if given) with param value (the identifier in the body of the block)
+        name_identifier_pair = {}
+        if param_name.text_value =~ /\S+\:/
+          # return the param-name as a symbol (start with a colon)
+          # without the final colon, since it's not part of the name
+          name_identifier_pair[:name] = ":#{param_name.text_value[0..-2]}"
+        end
+        name_identifier_pair[:identifier] = param_name_val.value
+        return name_identifier_pair
       end
     }
   end

@@ -109,3 +109,17 @@ Class >> :MyClass do
 end
 
 (MyClass new) funky: "christopher"
+
+
+Module >> :MyModule {
+  def test = do |bar|
+    Console puts: ("in MyModule#test with bar = " + (bar to_s))
+  end
+}
+
+Class >> :MyClass do
+  self mixin: [MyModule]
+end
+
+mc = MyClass new
+mc test: "mixin-test ;)"

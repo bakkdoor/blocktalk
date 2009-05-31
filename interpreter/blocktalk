@@ -17,10 +17,10 @@ parser_dynamic = ARGV.include?("--dynparser")
 
 if parser_dynamic
   # load & generate parser from grammar dynamically
-  Treetop.load "grammar/blockd.tt"
+  Treetop.load "grammar/blocktalk.tt"
 else
   # load pregenerated parser (faster)
-  require "grammar/blockd"
+  require "grammar/blocktalk"
 end
 
 if ARGV.size < 1

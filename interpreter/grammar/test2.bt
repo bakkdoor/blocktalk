@@ -1,12 +1,12 @@
-def foo = do |x|
+foo = do |x|
   Console puts ("bkzubb: " + (x to_s))
 end
 
-def bar = do
+bar = do
   100
 end
 
-Console puts: (self foo: 10)
+Console puts: (foo call: 10)
 
 
 [1,2,3] each { |x|

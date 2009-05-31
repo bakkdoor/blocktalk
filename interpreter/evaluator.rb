@@ -7,7 +7,8 @@ class Evaluator
   end
 
   def self.eval
-    Kernel::eval @expressions.join(";")
+#    Kernel::eval @expressions.join(";")
+    system("/usr/bin/env ruby -e 'require \"lib/core\";#{@expressions.join(';')}'")
   end
 
   def self.inspect

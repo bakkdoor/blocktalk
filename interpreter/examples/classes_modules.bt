@@ -1,0 +1,64 @@
+Module >> :ModuleA do
+  def method_a = do
+    Console puts: "in ModuleA#method_a!"
+  end
+end
+
+
+Module >> :ModuleB do
+  def method_b = do
+    Console puts: "in ModuleB#method_b!"
+  end
+end
+
+Class >> :Place do
+  def self from_city = do |city_name|
+    # should do something useful here ...
+    Place new
+  end
+
+  def coordinates = do
+    # do some calculation here...
+    return (Kernel rand)
+  end
+end
+
+Class >> :Person {
+  self mixin: [ModuleA, ModuleB]
+
+  def initialize = do |name age: age city: city|
+    @name = name
+    @age = age
+    @city = city
+  end
+
+  def go_to = do |place with: vehicle|
+    ((place is_a?: Place) and: ((self distance_to: place) < 10.5)) if_true {
+      vehicle take: self to: place
+    }
+  end
+
+  def place = do
+    Place from_city: @city
+  end
+
+  def distance_to = do |place|
+    (place is_a?: Place) if_true: {
+      dist = ((self place) coordinates) - (place coordinates)
+      dist abs
+    } if_false: {
+      0.0
+    }
+  end
+}
+
+
+chris = Person new: "Christopher Bertels" age: 22 city: "Osnabrück"
+city = Place from_city: "Berlin"
+
+Console puts: "Distance from chris to city:"
+Console puts: (chris distance_to: city)
+
+# Person mixed in ModuleA & ModuleB:
+chris method_a
+chris method_b

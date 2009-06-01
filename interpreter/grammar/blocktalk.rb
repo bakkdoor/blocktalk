@@ -583,8 +583,13 @@ module Blockd
             if r7
               r5 = r7
             else
-              self.index = i5
-              r5 = nil
+              r8 = _nt_literal
+              if r8
+                r5 = r8
+              else
+                self.index = i5
+                r5 = nil
+              end
             end
           end
           s0 << r5
@@ -758,7 +763,11 @@ module Blockd
 
   module Assignment1
     def value
-      "#{target.value} = #{val.subexpr.value}"
+      if val.respond_to?(:subexpr)
+        "#{target.value} = #{val.subexpr.value}"
+      else
+        "#{target.value} = #{val.value}"
+      end
     end
   end
 
@@ -2806,8 +2815,8 @@ module Blockd
       name_identifier_pair = {}
       if param_name.text_value =~ /\S+\:/
         # return the param-name as a symbol (start with a colon)
-        # without the final colon, since it's not part of the name
-        name_identifier_pair[:name] = ":#{param_name.text_value[0..-2]}"
+        # without the final colon & space, since it's not part of the name
+        name_identifier_pair[:name] = ":#{param_name.text_value[0..-3]}"
       end
       name_identifier_pair[:identifier] = param_name_val.value
       return name_identifier_pair
@@ -2840,11 +2849,11 @@ module Blockd
       r6 = _nt_identifier
       s5 << r6
       if r6
-        if input.index(':', index) == index
-          r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
-          @index += 1
+        if input.index(': ', index) == index
+          r7 = instantiate_node(SyntaxNode,input, index...(index + 2))
+          @index += 2
         else
-          terminal_parse_failure(':')
+          terminal_parse_failure(': ')
           r7 = nil
         end
         s5 << r7

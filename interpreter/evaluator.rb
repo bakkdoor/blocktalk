@@ -7,8 +7,9 @@ class Evaluator
   end
 
   def self.eval
+    load_path = File.dirname(__FILE__)
 #    Kernel::eval @expressions.join(";")
-    system("/usr/bin/env ruby -e 'require \"lib/core\";#{@expressions.join(';')}'")
+    system("/usr/bin/env ruby -e 'require \"#{load_path}/lib/core\";#{@expressions.join(';')}'")
   end
 
   def self.inspect

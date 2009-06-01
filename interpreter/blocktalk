@@ -59,7 +59,9 @@ end
 if ruby_output
   Evaluator.inspect
 else
-  Evaluator.eval
+  # also pass any additional args in ARGV to Evaluator
+  # (ARGV[0] is the name of the file to execute).
+  Evaluator.eval(ARGV[1..-1])
 
   if debug_on
     puts

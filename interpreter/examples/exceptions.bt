@@ -1,0 +1,11 @@
+try{
+  0 / 0
+  catch: ZeroDivisionError do |ex|
+    Console puts: "in catching Error!"
+    Console puts: "something else ;)"
+  end
+
+  ensure {
+    Console puts: "error!"
+  }
+}

@@ -1,8 +1,10 @@
 $: << File.expand_path(File.dirname(__FILE__))
 
 require "nodes/block_literal"
+require "nodes/catch"
 require "nodes/class_method_definition"
 require "nodes/comment"
+require "nodes/ensure"
 require "nodes/expression"
 require "nodes/identifier"
 require "nodes/integer_literal"
@@ -15,5 +17,6 @@ require "nodes/operator_message"
 require "nodes/return"
 require "nodes/root"
 require "nodes/subexpression"
+require "nodes/try"
 require "nodes/yield"
 

@@ -197,28 +197,43 @@ module Blockd
         if r4
           r1 = r4
         else
-          r5 = _nt_method_call
+          r5 = _nt_try_expression
           if r5
             r1 = r5
           else
-            r6 = _nt_assignment
+            r6 = _nt_catch_expression
             if r6
               r1 = r6
             else
-              r7 = _nt_literal
+              r7 = _nt_ensure_expression
               if r7
                 r1 = r7
               else
-                r8 = _nt_subexpression
+                r8 = _nt_method_call
                 if r8
                   r1 = r8
                 else
-                  r9 = _nt_comment
+                  r9 = _nt_assignment
                   if r9
                     r1 = r9
                   else
-                    self.index = i1
-                    r1 = nil
+                    r10 = _nt_literal
+                    if r10
+                      r1 = r10
+                    else
+                      r11 = _nt_subexpression
+                      if r11
+                        r1 = r11
+                      else
+                        r12 = _nt_comment
+                        if r12
+                          r1 = r12
+                        else
+                          self.index = i1
+                          r1 = nil
+                        end
+                      end
+                    end
                   end
                 end
               end
@@ -229,53 +244,53 @@ module Blockd
     end
     s0 << r1
     if r1
-      i10 = index
+      i13 = index
       if input.index('$', index) == index
-        r11 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        r14 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
         terminal_parse_failure('$')
-        r11 = nil
+        r14 = nil
       end
-      if r11
-        r10 = r11
+      if r14
+        r13 = r14
       else
-        i12, s12 = index, []
-        s13, i13 = [], index
+        i15, s15 = index, []
+        s16, i16 = [], index
         loop do
-          r14 = _nt_ws
-          if r14
-            s13 << r14
+          r17 = _nt_ws
+          if r17
+            s16 << r17
           else
             break
           end
         end
-        r13 = instantiate_node(SyntaxNode,input, i13...index, s13)
-        s12 << r13
-        if r13
-          r16 = _nt_newline
-          if r16
-            r15 = r16
+        r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
+        s15 << r16
+        if r16
+          r19 = _nt_newline
+          if r19
+            r18 = r19
           else
-            r15 = instantiate_node(SyntaxNode,input, index...index)
+            r18 = instantiate_node(SyntaxNode,input, index...index)
           end
-          s12 << r15
+          s15 << r18
         end
-        if s12.last
-          r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
-          r12.extend(Expression0)
+        if s15.last
+          r15 = instantiate_node(SyntaxNode,input, i15...index, s15)
+          r15.extend(Expression0)
         else
-          self.index = i12
-          r12 = nil
+          self.index = i15
+          r15 = nil
         end
-        if r12
-          r10 = r12
+        if r15
+          r13 = r15
         else
-          self.index = i10
-          r10 = nil
+          self.index = i13
+          r13 = nil
         end
       end
-      s0 << r10
+      s0 << r13
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
@@ -670,6 +685,205 @@ module Blockd
     end
 
     node_cache[:yield_statement][start_index] = r0
+
+    return r0
+  end
+
+  module TryExpression0
+    def try_block
+      elements[2]
+    end
+  end
+
+  def _nt_try_expression
+    start_index = index
+    if node_cache[:try_expression].has_key?(index)
+      cached = node_cache[:try_expression][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('try', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 3))
+      @index += 3
+    else
+      terminal_parse_failure('try')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      if input.index(' ', index) == index
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure(' ')
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
+      end
+      s0 << r2
+      if r2
+        r4 = _nt_block_literal
+        s0 << r4
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(TryNode,input, i0...index, s0)
+      r0.extend(TryExpression0)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:try_expression][start_index] = r0
+
+    return r0
+  end
+
+  module CatchExpression0
+    def identifier
+      elements[1]
+    end
+
+  end
+
+  module CatchExpression1
+    def error_class
+      elements[1]
+    end
+
+    def catch_block
+      elements[2]
+    end
+  end
+
+  def _nt_catch_expression
+    start_index = index
+    if node_cache[:catch_expression].has_key?(index)
+      cached = node_cache[:catch_expression][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('catch', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 5))
+      @index += 5
+    else
+      terminal_parse_failure('catch')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      i3, s3 = index, []
+      if input.index(': ', index) == index
+        r4 = instantiate_node(SyntaxNode,input, index...(index + 2))
+        @index += 2
+      else
+        terminal_parse_failure(': ')
+        r4 = nil
+      end
+      s3 << r4
+      if r4
+        r5 = _nt_identifier
+        s3 << r5
+        if r5
+          if input.index(' ', index) == index
+            r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            terminal_parse_failure(' ')
+            r6 = nil
+          end
+          s3 << r6
+        end
+      end
+      if s3.last
+        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+        r3.extend(CatchExpression0)
+      else
+        self.index = i3
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
+      end
+      s0 << r2
+      if r2
+        r7 = _nt_block_literal
+        s0 << r7
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(CatchNode,input, i0...index, s0)
+      r0.extend(CatchExpression1)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:catch_expression][start_index] = r0
+
+    return r0
+  end
+
+  module EnsureExpression0
+    def ensure_block
+      elements[2]
+    end
+  end
+
+  def _nt_ensure_expression
+    start_index = index
+    if node_cache[:ensure_expression].has_key?(index)
+      cached = node_cache[:ensure_expression][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('ensure', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 6))
+      @index += 6
+    else
+      terminal_parse_failure('ensure')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      if input.index(' ', index) == index
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure(' ')
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
+      end
+      s0 << r2
+      if r2
+        r4 = _nt_block_literal
+        s0 << r4
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(EnsureNode,input, i0...index, s0)
+      r0.extend(EnsureExpression0)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:ensure_expression][start_index] = r0
 
     return r0
   end

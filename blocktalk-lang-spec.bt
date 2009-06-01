@@ -89,30 +89,29 @@ Class in: File deriving: Stream do
       # trying method takes a block (between { and }).
       # this would also work: trying do ... end (same as in ruby).
       # in ruby: trying = begin.
-      trying{
+      try {
         # open file etc.
         file = File new: (IO base_file_open: file_name mode)
         # yield to block
-        yield file
+        yield: [file]
 
         # catching errors is easy.
         # simply use catch method with a given block to execute
         # if the specified class (as the parameter) is caugth.
-        catch IOError do |ex|
+        catch: IOError do |ex|
           Console puts: "Error while trying to open file #{file_name} with access mode: #{mode}"
         end
 
         # Error is baseclass of all exceptions -> this will get called when all the others didn't match
-        catch Error do |ex|
-
+        catch: Error do |ex|
+          Console puts: "Error: #{ex}"
         end
 
         # blocks to methodcalls can also be done via curly-braces syntax {} (instead of do ... end)
-        ensure{
+        ensure {
           file close # always close the file
         }
       }
-
       # and finally close again
     end
   end

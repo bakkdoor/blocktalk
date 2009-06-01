@@ -15,7 +15,9 @@ grammar Blockd do
   # an expression is one of the following:
   # assignment, method_call, literal or subexpression
   rule expression do
-    (subexpr:(method_definition / return_statement / yield_statement / method_call / assignment / literal / subexpression / comment)
+    (subexpr:(method_definition / return_statement / yield_statement / try_expression / catch_expression / ensure_expression
+              /
+              method_call / assignment / literal / subexpression / comment)
      ('$' / (ws* newline?)))
     <ExpressionNode>
   end
@@ -34,6 +36,18 @@ grammar Blockd do
 
   rule yield_statement do
     'yield' ':'? ' ' yieldval:(array_literal) <YieldNode>
+  end
+
+  rule try_expression do
+    'try' ' '? try_block:(block_literal) <TryNode>
+  end
+
+  rule catch_expression do
+    'catch' error_class:(': ' identifier ' ')? catch_block:(block_literal) <CatchNode>
+  end
+
+  rule ensure_expression do
+    'ensure' ' '? ensure_block:(block_literal) <EnsureNode>
   end
 
   # a subexpression is an expression surrounded by parenthesis for grouping.

@@ -43,7 +43,7 @@ grammar Blockd do
   end
 
   rule catch_expression do
-    'catch' error_class:(': ' identifier ' ')? catch_block:(block_literal) <CatchNode>
+    'catch' error_class:(': ' identifier ' ')? ' '? catch_block:(block_literal) <CatchNode>
   end
 
   rule ensure_expression do

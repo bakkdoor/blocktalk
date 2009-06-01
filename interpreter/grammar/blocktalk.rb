@@ -757,7 +757,7 @@ module Blockd
     end
 
     def catch_block
-      elements[2]
+      elements[3]
     end
   end
 
@@ -816,8 +816,23 @@ module Blockd
       end
       s0 << r2
       if r2
-        r7 = _nt_block_literal
+        if input.index(' ', index) == index
+          r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure(' ')
+          r8 = nil
+        end
+        if r8
+          r7 = r8
+        else
+          r7 = instantiate_node(SyntaxNode,input, index...index)
+        end
         s0 << r7
+        if r7
+          r9 = _nt_block_literal
+          s0 << r9
+        end
       end
     end
     if s0.last

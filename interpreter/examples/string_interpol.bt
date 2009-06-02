@@ -1,0 +1,10 @@
+greeted = "world!"
+Console puts: "Hello, #{greeted}"
+
+x = 0
+{(x to_i) <= 0} while_true {
+  x = Console gets: "Please enter a positive number (> 0):"
+}
+
+Console puts: "entered number is: #{x}"
+Console puts: "number (#{x to_i}) < 10: #{(x to_i) < 10}"

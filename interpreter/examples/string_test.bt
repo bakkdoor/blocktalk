@@ -1,0 +1,13 @@
+# Extend String class with ends_with? method
+# that checks if a string ends with a given string.
+String extend {
+  def ends_with? = do |end_string|
+    start_index = -1 * (end_string length)
+    end_index = end_string length
+    tail = self range_from: start_index to: end_index
+    tail == end_string
+  end
+}
+
+Console puts: ("hello, world!" ends_with?: "world!")    # output: true
+Console puts: ("hello, world!" ends_with?: "world")     # output: false

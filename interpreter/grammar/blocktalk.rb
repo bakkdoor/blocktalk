@@ -373,7 +373,7 @@ module Blockd
         end
         s1 << r5
         if r5
-          r7 = _nt_identifier
+          r7 = _nt_message_name
           s1 << r7
           if r7
             s8, i8 = [], index
@@ -476,7 +476,7 @@ module Blockd
             end
             s14 << r20
             if r20
-              r21 = _nt_identifier
+              r21 = _nt_message_name
               s14 << r21
               if r21
                 s22, i22 = [], index
@@ -1733,15 +1733,17 @@ module Blockd
   end
 
   module StringLiteral0
+    def string_val
+      elements[1]
+    end
+
   end
 
   module StringLiteral1
-  end
-
-  module StringLiteral2
-    def value
-      self.text_value
+    def string_val
+      elements[1]
     end
+
   end
 
   def _nt_string_literal
@@ -1752,51 +1754,281 @@ module Blockd
       return cached
     end
 
-    i0, s0 = index, []
+    i0 = index
+    i1, s1 = index, []
     if input.index('"', index) == index
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
+      r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
       @index += 1
     else
       terminal_parse_failure('"')
+      r2 = nil
+    end
+    s1 << r2
+    if r2
+      s3, i3 = [], index
+      loop do
+        i4 = index
+        r5 = _nt_string_interpolation
+        if r5
+          r4 = r5
+        else
+          r6 = _nt_string_char
+          if r6
+            r4 = r6
+          else
+            self.index = i4
+            r4 = nil
+          end
+        end
+        if r4
+          s3 << r4
+        else
+          break
+        end
+      end
+      r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+      s1 << r3
+      if r3
+        if input.index('"', index) == index
+          r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure('"')
+          r7 = nil
+        end
+        s1 << r7
+      end
+    end
+    if s1.last
+      r1 = instantiate_node(StringLiteralNode,input, i1...index, s1)
+      r1.extend(StringLiteral0)
+    else
+      self.index = i1
+      r1 = nil
+    end
+    if r1
+      r0 = r1
+    else
+      i8, s8 = index, []
+      if input.index("'", index) == index
+        r9 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure("'")
+        r9 = nil
+      end
+      s8 << r9
+      if r9
+        s10, i10 = [], index
+        loop do
+          i11 = index
+          r12 = _nt_string_interpolation
+          if r12
+            r11 = r12
+          else
+            r13 = _nt_string_char_single_quote
+            if r13
+              r11 = r13
+            else
+              self.index = i11
+              r11 = nil
+            end
+          end
+          if r11
+            s10 << r11
+          else
+            break
+          end
+        end
+        r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
+        s8 << r10
+        if r10
+          if input.index("'", index) == index
+            r14 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            terminal_parse_failure("'")
+            r14 = nil
+          end
+          s8 << r14
+        end
+      end
+      if s8.last
+        r8 = instantiate_node(StringLiteralNode,input, i8...index, s8)
+        r8.extend(StringLiteral1)
+      else
+        self.index = i8
+        r8 = nil
+      end
+      if r8
+        r0 = r8
+      else
+        self.index = i0
+        r0 = nil
+      end
+    end
+
+    node_cache[:string_literal][start_index] = r0
+
+    return r0
+  end
+
+  module StringChar0
+    def char
+      elements[1]
+    end
+  end
+
+  module StringChar1
+    def value
+      self.char.text_value
+    end
+  end
+
+  def _nt_string_char
+    start_index = index
+    if node_cache[:string_char].has_key?(index)
+      cached = node_cache[:string_char][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    i1 = index
+    if input.index('"', index) == index
+      r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
+      @index += 1
+    else
+      terminal_parse_failure('"')
+      r2 = nil
+    end
+    if r2
+      r1 = nil
+    else
+      self.index = i1
+      r1 = instantiate_node(SyntaxNode,input, index...index)
+    end
+    s0 << r1
+    if r1
+      if index < input_length
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure("any character")
+        r3 = nil
+      end
+      s0 << r3
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(StringChar0)
+      r0.extend(StringChar1)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:string_char][start_index] = r0
+
+    return r0
+  end
+
+  module StringCharSingleQuote0
+    def char
+      elements[1]
+    end
+  end
+
+  module StringCharSingleQuote1
+    def value
+      self.char.text_value
+    end
+  end
+
+  def _nt_string_char_single_quote
+    start_index = index
+    if node_cache[:string_char_single_quote].has_key?(index)
+      cached = node_cache[:string_char_single_quote][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    i1 = index
+    if input.index("'", index) == index
+      r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
+      @index += 1
+    else
+      terminal_parse_failure("'")
+      r2 = nil
+    end
+    if r2
+      r1 = nil
+    else
+      self.index = i1
+      r1 = instantiate_node(SyntaxNode,input, index...index)
+    end
+    s0 << r1
+    if r1
+      if index < input_length
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure("any character")
+        r3 = nil
+      end
+      s0 << r3
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(StringCharSingleQuote0)
+      r0.extend(StringCharSingleQuote1)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:string_char_single_quote][start_index] = r0
+
+    return r0
+  end
+
+  module StringInterpolation0
+    def expr
+      elements[2]
+    end
+
+  end
+
+  module StringInterpolation1
+    def value
+      val = "\#\{"
+      val += expr.respond_to?(:value) ? expr.value : expr.subexpr.value
+      val += "\}"
+    end
+  end
+
+  def _nt_string_interpolation
+    start_index = index
+    if node_cache[:string_interpolation].has_key?(index)
+      cached = node_cache[:string_interpolation][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('#{', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 2))
+      @index += 2
+    else
+      terminal_parse_failure('#{')
       r1 = nil
     end
     s0 << r1
     if r1
       s2, i2 = [], index
       loop do
-        i3, s3 = index, []
-        i4 = index
-        if input.index('"', index) == index
-          r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
-          @index += 1
-        else
-          terminal_parse_failure('"')
-          r5 = nil
-        end
-        if r5
-          r4 = nil
-        else
-          self.index = i4
-          r4 = instantiate_node(SyntaxNode,input, index...index)
-        end
-        s3 << r4
-        if r4
-          if index < input_length
-            r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
-            @index += 1
-          else
-            terminal_parse_failure("any character")
-            r6 = nil
-          end
-          s3 << r6
-        end
-        if s3.last
-          r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
-          r3.extend(StringLiteral0)
-        else
-          self.index = i3
-          r3 = nil
-        end
+        r3 = _nt_spaces
         if r3
           s2 << r3
         else
@@ -1806,26 +2038,60 @@ module Blockd
       r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
       s0 << r2
       if r2
-        if input.index('"', index) == index
-          r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
-          @index += 1
+        i4 = index
+        r5 = _nt_expression
+        if r5
+          r4 = r5
         else
-          terminal_parse_failure('"')
-          r7 = nil
+          r6 = _nt_identifier
+          if r6
+            r4 = r6
+          else
+            r7 = _nt_literal
+            if r7
+              r4 = r7
+            else
+              self.index = i4
+              r4 = nil
+            end
+          end
         end
-        s0 << r7
+        s0 << r4
+        if r4
+          s8, i8 = [], index
+          loop do
+            r9 = _nt_spaces
+            if r9
+              s8 << r9
+            else
+              break
+            end
+          end
+          r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+          s0 << r8
+          if r8
+            if input.index('}', index) == index
+              r10 = instantiate_node(SyntaxNode,input, index...(index + 1))
+              @index += 1
+            else
+              terminal_parse_failure('}')
+              r10 = nil
+            end
+            s0 << r10
+          end
+        end
       end
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(StringLiteral1)
-      r0.extend(StringLiteral2)
+      r0.extend(StringInterpolation0)
+      r0.extend(StringInterpolation1)
     else
       self.index = i0
       r0 = nil
     end
 
-    node_cache[:string_literal][start_index] = r0
+    node_cache[:string_interpolation][start_index] = r0
 
     return r0
   end

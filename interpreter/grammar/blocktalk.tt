@@ -23,10 +23,10 @@ grammar Blockd do
   end
 
   rule method_definition do
-    spaces* 'def' spaces+ method_name:(identifier) ws* '=' ws* method_body:(block_literal)
+    spaces* 'def' spaces+ method_name:(message_name)  ws* '=' ws* method_body:(block_literal)
     <MethodDefinitionNode>
       /
-    spaces* 'def' spaces+  'self ' method_name:(identifier) ws* '=' ws* method_body:(block_literal)
+    spaces* 'def' spaces+  'self ' method_name:(message_name) ws* '=' ws* method_body:(block_literal)
     <ClassMethodDefinitionNode>
   end
 
@@ -160,9 +160,32 @@ grammar Blockd do
   end
 
   rule string_literal do
-    '"' (!'"' .)* '"' {
+    '"' string_val:(string_interpolation / string_char)* '"' <StringLiteralNode>
+      / "'" string_val:(string_interpolation / string_char_single_quote)* "'" <StringLiteralNode>
+  end
+
+  rule string_char do
+    !'"' char:(.) {
       def value
-        self.text_value
+        self.char.text_value
+      end
+    }
+  end
+
+  rule string_char_single_quote do
+    !"'" char:(.) {
+      def value
+        self.char.text_value
+      end
+    }
+  end
+
+  rule string_interpolation do
+    '#{' spaces* expr:(expression / identifier / literal) spaces* '}' {
+      def value
+        val = "\#\{"
+        val += expr.respond_to?(:value) ? expr.value : expr.subexpr.value
+        val += "\}"
       end
     }
   end

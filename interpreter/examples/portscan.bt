@@ -9,20 +9,21 @@ host = "localhost"
 open_ports = []
 
 1 upto: 1024 do |port|
-  try{
-    t = TCPSocket new: host port: port
-    open_ports << port
+  Thread new {
+    try{
+      t = TCPSocket new: host port: port
+      open_ports << port
 
-    Console puts
-    s = Socket getnameinfo: ["AF_INET", port, "localhost"]
-    Console puts: ("Port #{port} (#{s[1]})" + " is open.")
+      s = Socket getnameinfo: ["AF_INET", port, host]
+      Console puts: ("\nPort #{port} (#{s[1]})" + " is open.")
 
-    catch{
-      Console print: "."
-    }
+      catch{
+        Console print: "."
+      }
 
-    ensure{
-      t if { t close }
+      ensure{
+        t if { t close }
+      }
     }
   }
 end

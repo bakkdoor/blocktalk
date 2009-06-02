@@ -13,4 +13,16 @@ class Console
     end
     Kernel::gets
   end
+
+  def self.putc(*args)
+    Kernel::putc(*args)
+  end
+
+  def self.printf(arg_array)
+    Kernel::printf(*arg_array)
+  end
+
+  def self.clear
+    puts "\e[H\e[2J"
+  end
 end

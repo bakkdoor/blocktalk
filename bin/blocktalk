@@ -4,7 +4,7 @@ require "rubygems"
 require "treetop"
 
 # expand search path correct subdir.
-$: << File.expand_path(File.dirname(__FILE__))
+$: << File.expand_path(File.dirname(__FILE__) + "/../")
 
 load_path = ""
 

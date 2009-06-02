@@ -1,0 +1,32 @@
+System require: "socket"
+
+host = "localhost"
+
+(ARGV at: 0) if {
+  host = (ARGV at: 0)
+}
+
+open_ports = []
+
+1 upto: 1024 do |port|
+  try{
+    t = TCPSocket new: host port: port
+    open_ports << port
+
+    Console puts
+    s = Socket getnameinfo: ["AF_INET", port, "localhost"]
+    Console puts: ("Port #{port} (#{s[1]})" + " is open.")
+
+    catch{
+      Console print: "."
+    }
+
+    ensure{
+      t if { t close }
+    }
+  }
+end
+
+Console puts
+Console puts: "Open ports on #{host} are:"
+Console puts: (open_ports join: ", ")

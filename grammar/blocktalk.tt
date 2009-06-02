@@ -156,7 +156,7 @@ grammar Blockd do
   # literals
 
   rule literal do
-    string_literal / symbol_literal / float_literal /int_literal / char_literal / array_literal / hash_literal / block_literal
+    string_literal / symbol_literal / float_literal /int_literal / char_literal / array_literal / hash_literal / block_literal / regex_literal
   end
 
   rule string_literal do
@@ -324,11 +324,19 @@ grammar Blockd do
     }
   end
 
+  rule regex_literal do
+    '/' (!'/' .)* '/' {
+      def value
+        self.text_value
+      end
+    }
+  end
+
 
   # other rules
 
   rule identifier do
-    ('@' / '@@')? [a-zA-Z]+ [a-zA-Z0-9_]* <IdentifierNode>
+    ('@' / '@@')? ([a-zA-Z]+ / '$' [0-9]) [a-zA-Z0-9_]* <IdentifierNode>
   end
 
   rule message_name do
@@ -348,7 +356,7 @@ grammar Blockd do
   end
 
   rule operator_symbol do
-    ('<=' / '>='/ '<' / '>' / '==' / '!=' / '+=' / '-=' / '&' / '.' / '+' / '-' / '/' / '*' / '|')
+    ('<=' / '>='/ '<' / '>' / '==' / '!=' / '+=' / '-=' / '&' / '.' / '+' / '-' / '/' / '*' / '|' / '=~')
   end
 
   rule ws do

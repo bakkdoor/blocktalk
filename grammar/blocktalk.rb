@@ -1716,8 +1716,13 @@ module Blockd
                   if r8
                     r0 = r8
                   else
-                    self.index = i0
-                    r0 = nil
+                    r9 = _nt_regex_literal
+                    if r9
+                      r0 = r9
+                    else
+                      self.index = i0
+                      r0 = nil
+                    end
                   end
                 end
               end
@@ -3437,7 +3442,108 @@ module Blockd
     return r0
   end
 
+  module RegexLiteral0
+  end
+
+  module RegexLiteral1
+  end
+
+  module RegexLiteral2
+    def value
+      self.text_value
+    end
+  end
+
+  def _nt_regex_literal
+    start_index = index
+    if node_cache[:regex_literal].has_key?(index)
+      cached = node_cache[:regex_literal][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('/', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
+      @index += 1
+    else
+      terminal_parse_failure('/')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      s2, i2 = [], index
+      loop do
+        i3, s3 = index, []
+        i4 = index
+        if input.index('/', index) == index
+          r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure('/')
+          r5 = nil
+        end
+        if r5
+          r4 = nil
+        else
+          self.index = i4
+          r4 = instantiate_node(SyntaxNode,input, index...index)
+        end
+        s3 << r4
+        if r4
+          if index < input_length
+            r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            terminal_parse_failure("any character")
+            r6 = nil
+          end
+          s3 << r6
+        end
+        if s3.last
+          r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+          r3.extend(RegexLiteral0)
+        else
+          self.index = i3
+          r3 = nil
+        end
+        if r3
+          s2 << r3
+        else
+          break
+        end
+      end
+      r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+      s0 << r2
+      if r2
+        if input.index('/', index) == index
+          r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure('/')
+          r7 = nil
+        end
+        s0 << r7
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(RegexLiteral1)
+      r0.extend(RegexLiteral2)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:regex_literal][start_index] = r0
+
+    return r0
+  end
+
   module Identifier0
+  end
+
+  module Identifier1
   end
 
   def _nt_identifier
@@ -3481,49 +3587,85 @@ module Blockd
     end
     s0 << r1
     if r1
-      s5, i5 = [], index
+      i5 = index
+      s6, i6 = [], index
       loop do
         if input.index(Regexp.new('[a-zA-Z]'), index) == index
-          r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
           @index += 1
         else
-          r6 = nil
+          r7 = nil
         end
-        if r6
-          s5 << r6
+        if r7
+          s6 << r7
         else
           break
         end
       end
-      if s5.empty?
-        self.index = i5
-        r5 = nil
+      if s6.empty?
+        self.index = i6
+        r6 = nil
       else
-        r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+        r6 = instantiate_node(SyntaxNode,input, i6...index, s6)
+      end
+      if r6
+        r5 = r6
+      else
+        i8, s8 = index, []
+        if input.index('$', index) == index
+          r9 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure('$')
+          r9 = nil
+        end
+        s8 << r9
+        if r9
+          if input.index(Regexp.new('[0-9]'), index) == index
+            r10 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            r10 = nil
+          end
+          s8 << r10
+        end
+        if s8.last
+          r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+          r8.extend(Identifier0)
+        else
+          self.index = i8
+          r8 = nil
+        end
+        if r8
+          r5 = r8
+        else
+          self.index = i5
+          r5 = nil
+        end
       end
       s0 << r5
       if r5
-        s7, i7 = [], index
+        s11, i11 = [], index
         loop do
           if input.index(Regexp.new('[a-zA-Z0-9_]'), index) == index
-            r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            r12 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
-            r8 = nil
+            r12 = nil
           end
-          if r8
-            s7 << r8
+          if r12
+            s11 << r12
           else
             break
           end
         end
-        r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-        s0 << r7
+        r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
+        s0 << r11
       end
     end
     if s0.last
       r0 = instantiate_node(IdentifierNode,input, i0...index, s0)
-      r0.extend(Identifier0)
+      r0.extend(Identifier1)
     else
       self.index = i0
       r0 = nil
@@ -3936,8 +4078,19 @@ module Blockd
                                 if r15
                                   r0 = r15
                                 else
-                                  self.index = i0
-                                  r0 = nil
+                                  if input.index('=~', index) == index
+                                    r16 = instantiate_node(SyntaxNode,input, index...(index + 2))
+                                    @index += 2
+                                  else
+                                    terminal_parse_failure('=~')
+                                    r16 = nil
+                                  end
+                                  if r16
+                                    r0 = r16
+                                  else
+                                    self.index = i0
+                                    r0 = nil
+                                  end
                                 end
                               end
                             end

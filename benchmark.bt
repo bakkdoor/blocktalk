@@ -1,0 +1,18 @@
+#!/usr/bin/env blocktalk
+
+# simple benchmarking script.
+# runs a given blocktalk programm a specified amount of times (default 10).
+
+amount = 10
+args = ARGV join: " "
+
+(args =~ /-n ([0-9]+)/) if {
+  amount = $1 to_i
+}
+
+script_file = ARGV at: 0
+
+amount times do |i|
+  Kernel system: "blocktalk #{script_file} > /dev/null"
+  Console print: "."
+end

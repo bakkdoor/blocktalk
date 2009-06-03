@@ -14,7 +14,7 @@ For example, defining classes and modules in Blocktalk is also done via methodca
 respectively:
 
     Class >> :Foo do
-  	def bar = do |baz|
+	def bar = do |baz|
 	    Console puts: "In Foo#bar with baz = #{baz}"
     	end
     end

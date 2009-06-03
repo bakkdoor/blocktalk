@@ -109,3 +109,5 @@ Another goal is to add some more unique features, that Ruby for example does not
 - Treetop ([http://treetop.rubyforge.org](http://treetop.rubyforge.org)) for the parser.
 
 - That's it for now :)
+
+#### (C) 2009 Christopher Bertels / [http://www.adztec-independent.de](http://www.adztec-independent.de) ####

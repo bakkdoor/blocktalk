@@ -13,11 +13,11 @@ methodcalls on object, similar to how it is done in Smalltalk.
 For example, defining classes and modules in Blocktalk is also done via methodcalls to the Class and Module class
 respectively:
 
-`Class >> :Foo do
-  def bar = do |baz|
-    Console puts: "In Foo#bar with baz = #{baz}"
-  end
-end`
+    Class >> :Foo do
+  	def bar = do |baz|
+	    Console puts: "In Foo#bar with baz = #{baz}"
+    	end
+    end
 
 Here, the ">>" method is called on the Class class (which also is an object - a class object), which takes the name
 of the class as a Symbol and then a codeblock that gets evaluated in the context of the class. This can be done in Ruby
@@ -39,21 +39,21 @@ This is also used in a few predefined methods in the standard library. An exampl
 can take two explicit codeblocks for a if and then part, or just a block for the if part (either explicitly as an argument
 or implicitly as a ruby-like method call with a passed in block):
 
-`(a < b) if_true: {
-   Console print: "a smaller than b!"
- } if_false: {
-   Console print: "a greater than b!"
- }`
+    (a < b) if_true: {
+	Console print: "a smaller than b!"
+    } if_false: {
+	Console print: "a greater than b!"
+    }
 
 Since Blocktalk supports a very easy literal syntax for codeblocks, many special keywords aren't needed (as in Smalltalk).
 The example above shows, how a typicall if-then conditional could be written.
 
 Another example would be a while loop:
 
-`i = Console gets: "Please enter a number!"
- (i < 10) while_true {
-   Console print: "a smaller than b!"
- }`
+    i = Console gets: "Please enter a number!"
+    (i < 10) while_true {
+	Console print: "a smaller than b!"
+    }
 
 In this case, while_true takes a ruby-like implicit block, noticeable by the absence of the colon after the methodname,
 which indicates a method call with a passed in argument.
@@ -64,18 +64,18 @@ which indicates a method call with a passed in argument.
 Exception handling in Blocktalk is done similar to most programming languages, including Ruby:
 
 
-`i = Console gets: "Please enter a number!"
- try {
-   Console print: "10 / i = #{(10 / (i to_i))}"
+    i = Console gets: "Please enter a number!"
+    try {
+	Console print: "10 / i = #{(10 / (i to_i))}"
    
-   catch: ZeroDivisionError do |ex|
-     Console print: "got a exception: #{ex message}"
-   end
+	catch: ZeroDivisionError do |ex|
+	    Console print: "got a exception: #{ex message}"
+	end
 
-   ensure {
-     Console print: "this will get done, no matter what value i has!"
-   }
- }`
+	ensure {
+	    Console print: "this will get done, no matter what value i has!"
+	}
+    }
 
 This example will obviously fail if the we enter a zero. As in Ruby, the ensure-block gets run independent of an error
 being raised or not (similar to e.g. `finally` in Java). 

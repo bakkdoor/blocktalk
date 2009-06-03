@@ -6,9 +6,15 @@ host = "localhost"
   host = (ARGV at: 0)
 }
 
+max_port = 1024
+
+((ARGV join: " ") =~ /\-n ([0-9]+)/) if {
+  max_port = $1 to_i
+}
+
 open_ports = []
 
-1 upto: 1024 do |port|
+1 upto: max_port do |port|
   Thread new {
     try{
       t = TCPSocket new: host port: port

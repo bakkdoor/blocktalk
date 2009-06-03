@@ -98,6 +98,6 @@ Something I'd like to add in the future is a bytecode compiler for Ruby 1.9.
 
 ## Dependencies ##
 
-- Treetop (http://treetop.rubyforge.org) for the parser.
+- Treetop ([http://treetop.rubyforge.org](http://treetop.rubyforge.org)) for the parser.
 
 - That's it for now :)

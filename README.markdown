@@ -5,7 +5,7 @@
 It has a syntax familiar to Smalltalk users, but also integrates some syntactic elements from Ruby, 
 mainly most literal syntax including literal syntax for blocks, hashes, arrays, symbols and regular expressions.
 In contrast to Ruby, there are only very few predefined keywords in the language, everything else is achieved via
-methodcalls on object, similar to how it is done in Smalltalk.
+methodcalls on objects, similar to how it is done in Smalltalk.
 
 
 ### Class definitions ###
@@ -94,6 +94,13 @@ literal syntax (Integers, Floats, Symbols, Hashes, Arrays, Codeblocks, Regular E
 written in Ruby, that actually is somewhat of a compiler. As of now, the code gets parsed and translated into (quite ugly)
 Ruby code, which then gets fed into Ruby and executed. I know this isn't the best way for now probably, but it works.
 Something I'd like to add in the future is a bytecode compiler for Ruby 1.9.
+
+
+## Implementation ##
+
+Blocktalk is implemented in Ruby. The goal is to be able to run any Ruby code available, making it easy to get something
+real and working fast.
+Another goal is to add some more unique features, that Ruby for example does not support. I'm very open for ideas on this.
 
 
 ## Dependencies ##

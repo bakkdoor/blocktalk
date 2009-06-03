@@ -50,9 +50,10 @@ The example above shows, how a typicall if-then conditional could be written.
 
 Another example would be a while loop:
 
-    i = Console gets: "Please enter a number!"
-    (i < 10) while_true {
+    i = (Console gets: "Please enter a number!") to_i
+    {i < 10} while_true {
 	Console print: "a smaller than b!"
+	i = (Console gets: "Enter again!") to_i
     }
 
 In this case, while_true takes a ruby-like implicit block, noticeable by the absence of the colon after the methodname,

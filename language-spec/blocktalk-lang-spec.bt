@@ -6,8 +6,9 @@
   multiline comments look like this
 #-#
 
-# simple global  method definition.
-# methods in general are simply names to which anonymous methods / codeblocks are bound.
+# simple anonymous function definition.
+# functions / procedures / methods in general are simply names
+# to which anonymous methods / codeblocks are bound.
 # in contrast to ruby, there is no difference between lambdas, procs & blocks.
 foo = do |bar baz|
   bar puts # sending message puts to object bar

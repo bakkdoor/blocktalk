@@ -260,6 +260,7 @@ grammar Blockd do
     }
   end
 
+  # hash entry: 'key => value'
   rule hash_entry do
     key:(literal / identifier) ws* '=>' ws* val:(literal / identifier) {
       def value
@@ -297,6 +298,7 @@ grammar Blockd do
     }
   end
 
+  # block parameters (e.g. |a,b,c|)
   rule block_params do
     '|' params:(block_param)+ '|' {
       def value
@@ -333,10 +335,26 @@ grammar Blockd do
     }
   end
 
+  # we allow some inline ruby in blocktalk
+  # (mainly as a help for defining some standard library methods etc.)
+  # syntax: %ruby{ ... }%
   rule inline_ruby do
-    '%ruby' ws* '{' ws* ruby_code:(!'}%' .)+  '}%' {
+    '%ruby' ws* '{' ws* ruby_code:(comment / (!'}%' .))+  '}%' {
       def value
-        ruby_code.text_value.gsub(/\s*/, "")
+        return_val = ""
+        ruby_code.elements.each do |e|
+          unless e.respond_to?(:value) # when NOT a comment
+            return_val += e.text_value.gsub(/[\n\t]/, ";").gsub(/\s+/, " ")
+          else
+            # check if its actually a comment, or just a string
+            # interpolation - I know, it's ugly :(
+            if e.text_value =~ /#\{\S*\}/
+              # if it's just a string interpolation, also return it
+              return_val += e.text_value + ";"
+            end
+          end
+        end
+        return_val
       end
     }
   end
@@ -344,10 +362,14 @@ grammar Blockd do
 
   # other rules
 
+  # identifiers are variable & possible methodnames, class & module
+  # names - basically anything, that you can store something in or
+  # assign to.
   rule identifier do
     ('@' / '@@')? ([a-zA-Z]+ / '$' [0-9]) [a-zA-Z0-9_]* <IdentifierNode>
   end
 
+  # possible names for messages / methods
   rule message_name do
     [a-zA-Z]+ [a-zA-Z0-9_]* ('?' / '!' / '=')? {
       def value
@@ -356,6 +378,7 @@ grammar Blockd do
     }
   end
 
+  # operator name combinations
   rule operator do
     ('=' operator_symbol+) / (operator_symbol '=' operator_symbol*) / operator_symbol+ {
       def value
@@ -368,38 +391,42 @@ grammar Blockd do
     ('<=' / '>='/ '<' / '>' / '==' / '!=' / '+=' / '-=' / '&' / '.' / '+' / '-' / '/' / '*' / '|' / '=~')
   end
 
+  # whitespace (with newline)
   rule ws do
     [\n\s\t]+
   end
 
+  # whitespace (without newline)
   rule spaces do
     [\s\t]+
   end
 
-  rule line_breaking_ws do
-    [\n\s\t]+
-  end
-
+  # newline character
   rule newline do
     [\n]+
   end
 
+  # the 'do' keyword.
   rule do_keyword do
     'do' ![a-zA-Z0-9_] &ws
   end
 
+  # the 'end' keyword
   rule end_keyword do
     'end' ![a-zA-Z0-9_]
   end
 
+  # digits between 1 and 9
   rule non_zero_digit do
     [1-9]
   end
 
+  # digits
   rule digit do
     [0-9]
   end
 
+  # prefix sign for number literals
   rule sign do
     ('+' / '-')
   end

@@ -1,0 +1,20 @@
+# inline ruby test
+Class >> :Foo do
+  %ruby{
+    # some inline ruby code ;)
+    puts "this gets run, when this classdefinition gets executed!"
+    puts "we can put any kind of ruby code here :)"
+    def ruby_method(arg)
+      puts "in Foo#ruby_method: #{arg}"
+    end
+  }%
+
+  def blocktalk_method = do
+    Console puts: "in Foo#blocktalk_method!"
+    Console puts: "calling Foo#ruby_method:"
+    self ruby_method: "chris"
+  end
+end
+
+f = Foo new
+f blocktalk_method

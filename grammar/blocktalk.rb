@@ -225,12 +225,17 @@ module Blockd
                       if r11
                         r1 = r11
                       else
-                        r12 = _nt_comment
+                        r12 = _nt_inline_ruby
                         if r12
                           r1 = r12
                         else
-                          self.index = i1
-                          r1 = nil
+                          r13 = _nt_comment
+                          if r13
+                            r1 = r13
+                          else
+                            self.index = i1
+                            r1 = nil
+                          end
                         end
                       end
                     end
@@ -244,53 +249,53 @@ module Blockd
     end
     s0 << r1
     if r1
-      i13 = index
+      i14 = index
       if input.index('$', index) == index
-        r14 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        r15 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
         terminal_parse_failure('$')
-        r14 = nil
+        r15 = nil
       end
-      if r14
-        r13 = r14
+      if r15
+        r14 = r15
       else
-        i15, s15 = index, []
-        s16, i16 = [], index
+        i16, s16 = index, []
+        s17, i17 = [], index
         loop do
-          r17 = _nt_ws
-          if r17
-            s16 << r17
+          r18 = _nt_ws
+          if r18
+            s17 << r18
           else
             break
           end
         end
-        r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
-        s15 << r16
-        if r16
-          r19 = _nt_newline
-          if r19
-            r18 = r19
+        r17 = instantiate_node(SyntaxNode,input, i17...index, s17)
+        s16 << r17
+        if r17
+          r20 = _nt_newline
+          if r20
+            r19 = r20
           else
-            r18 = instantiate_node(SyntaxNode,input, index...index)
+            r19 = instantiate_node(SyntaxNode,input, index...index)
           end
-          s15 << r18
+          s16 << r19
         end
-        if s15.last
-          r15 = instantiate_node(SyntaxNode,input, i15...index, s15)
-          r15.extend(Expression0)
+        if s16.last
+          r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
+          r16.extend(Expression0)
         else
-          self.index = i15
-          r15 = nil
+          self.index = i16
+          r16 = nil
         end
-        if r15
-          r13 = r15
+        if r16
+          r14 = r16
         else
-          self.index = i13
-          r13 = nil
+          self.index = i14
+          r14 = nil
         end
       end
-      s0 << r13
+      s0 << r14
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
@@ -3560,6 +3565,174 @@ module Blockd
     return r0
   end
 
+  module InlineRuby0
+  end
+
+  module InlineRuby1
+    def ruby_code
+      elements[4]
+    end
+
+  end
+
+  module InlineRuby2
+    def value
+      return_val = ""
+      ruby_code.elements.each do |e|
+        unless e.respond_to?(:value) # when NOT a comment
+          return_val += e.text_value.gsub(/[\n\t]/, ";").gsub(/\s+/, " ")
+        else
+          # check if its actually a comment, or just a string
+          # interpolation - I know, it's ugly :(
+          if e.text_value =~ /#\{\S*\}/
+            # if it's just a string interpolation, also return it
+            return_val += e.text_value + ";"
+          end
+        end
+      end
+      return_val
+    end
+  end
+
+  def _nt_inline_ruby
+    start_index = index
+    if node_cache[:inline_ruby].has_key?(index)
+      cached = node_cache[:inline_ruby][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('%ruby', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 5))
+      @index += 5
+    else
+      terminal_parse_failure('%ruby')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      s2, i2 = [], index
+      loop do
+        r3 = _nt_ws
+        if r3
+          s2 << r3
+        else
+          break
+        end
+      end
+      r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+      s0 << r2
+      if r2
+        if input.index('{', index) == index
+          r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure('{')
+          r4 = nil
+        end
+        s0 << r4
+        if r4
+          s5, i5 = [], index
+          loop do
+            r6 = _nt_ws
+            if r6
+              s5 << r6
+            else
+              break
+            end
+          end
+          r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+          s0 << r5
+          if r5
+            s7, i7 = [], index
+            loop do
+              i8 = index
+              r9 = _nt_comment
+              if r9
+                r8 = r9
+              else
+                i10, s10 = index, []
+                i11 = index
+                if input.index('}%', index) == index
+                  r12 = instantiate_node(SyntaxNode,input, index...(index + 2))
+                  @index += 2
+                else
+                  terminal_parse_failure('}%')
+                  r12 = nil
+                end
+                if r12
+                  r11 = nil
+                else
+                  self.index = i11
+                  r11 = instantiate_node(SyntaxNode,input, index...index)
+                end
+                s10 << r11
+                if r11
+                  if index < input_length
+                    r13 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                    @index += 1
+                  else
+                    terminal_parse_failure("any character")
+                    r13 = nil
+                  end
+                  s10 << r13
+                end
+                if s10.last
+                  r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
+                  r10.extend(InlineRuby0)
+                else
+                  self.index = i10
+                  r10 = nil
+                end
+                if r10
+                  r8 = r10
+                else
+                  self.index = i8
+                  r8 = nil
+                end
+              end
+              if r8
+                s7 << r8
+              else
+                break
+              end
+            end
+            if s7.empty?
+              self.index = i7
+              r7 = nil
+            else
+              r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+            end
+            s0 << r7
+            if r7
+              if input.index('}%', index) == index
+                r14 = instantiate_node(SyntaxNode,input, index...(index + 2))
+                @index += 2
+              else
+                terminal_parse_failure('}%')
+                r14 = nil
+              end
+              s0 << r14
+            end
+          end
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(InlineRuby1)
+      r0.extend(InlineRuby2)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:inline_ruby][start_index] = r0
+
+    return r0
+  end
+
   module Identifier0
   end
 
@@ -4196,40 +4369,6 @@ module Blockd
     end
 
     node_cache[:spaces][start_index] = r0
-
-    return r0
-  end
-
-  def _nt_line_breaking_ws
-    start_index = index
-    if node_cache[:line_breaking_ws].has_key?(index)
-      cached = node_cache[:line_breaking_ws][index]
-      @index = cached.interval.end if cached
-      return cached
-    end
-
-    s0, i0 = [], index
-    loop do
-      if input.index(Regexp.new('[\\n\\s\\t]'), index) == index
-        r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
-        @index += 1
-      else
-        r1 = nil
-      end
-      if r1
-        s0 << r1
-      else
-        break
-      end
-    end
-    if s0.empty?
-      self.index = i0
-      r0 = nil
-    else
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-    end
-
-    node_cache[:line_breaking_ws][start_index] = r0
 
     return r0
   end

@@ -17,7 +17,7 @@ grammar Blockd do
   rule expression do
     (subexpr:(method_definition / return_statement / yield_statement / try_expression / catch_expression / ensure_expression
               /
-              method_call / assignment / literal / subexpression / comment)
+              method_call / assignment / literal / subexpression / inline_ruby / comment)
      ('$' / (ws* newline?)))
     <ExpressionNode>
   end
@@ -329,6 +329,14 @@ grammar Blockd do
     '/' (!'/' .)* '/' {
       def value
         self.text_value
+      end
+    }
+  end
+
+  rule inline_ruby do
+    '%ruby' ws* '{' ws* ruby_code:(!'}%' .)+  '}%' {
+      def value
+        ruby_code.text_value.gsub(/\s*/, "")
       end
     }
   end

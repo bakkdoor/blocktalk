@@ -1,5 +1,9 @@
 class Class
-  def self.in(class_name_sym, superclass = Object, &block)
+  def self.in(class_name_sym, &block)
+    self.in__subclassing(class_name_sym, Object, &block)
+  end
+
+  def self.in__subclassing(class_name_sym, superclass = Object, &block)
     if Kernel::constants.include?(class_name_sym.to_s)
       classobj = Kernel::const_get(class_name_sym)
       classobj.class_eval(&block)
@@ -17,7 +21,7 @@ class Class
       superclass = class_name_sym.values.first
     end
 
-    self.in(class_name, superclass, &block)
+    self.in__subclassing(class_name, superclass, &block)
   end
 
   def extend(&block)

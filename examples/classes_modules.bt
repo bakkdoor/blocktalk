@@ -9,6 +9,10 @@ Module >> :ModuleB do
   def method_b = do
     Console puts: "in ModuleB#method_b!"
   end
+
+  def method_c = do |param and: param2 plus: param3|
+    Console puts: "in ModuleB#method_c: #{param}, #{param2}, #{param3}"
+  end
 end
 
 Class >> :Place do
@@ -25,7 +29,6 @@ end
 
 Class >> :Person {
   self mixin: [ModuleA, ModuleB]
-
   def initialize = do |name age: age city: city|
     @name = name
     @age = age
@@ -62,3 +65,4 @@ Console puts: (chris distance_to: city)
 # Person mixed in ModuleA & ModuleB:
 chris method_a
 chris method_b
+chris method_c: "hey" and: "ho" plus: "cool!"

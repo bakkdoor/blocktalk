@@ -1,5 +1,5 @@
 class Object
-  def if_true(true_block = nil, false_block = nil)
+  def if_true__if_false(true_block = nil, false_block = nil)
     if self == true
       if true_block
         true_block.call

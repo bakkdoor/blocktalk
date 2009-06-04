@@ -1490,7 +1490,7 @@ module Blockd
 
   module FirstParam1
     def value
-      first_param_value
+      {:name => nil, :value => first_param_value.value}
     end
   end
 
@@ -1552,7 +1552,8 @@ module Blockd
   module Param1
     def value
       #[param_name.value, param_value.value]
-      param_value
+      #param_value
+      {:name => param_name.value, :value => param_value.value}
     end
   end
 
@@ -3298,7 +3299,7 @@ module Blockd
     end
 
     def param_name_val
-      elements[2]
+      elements[3]
     end
 
   end
@@ -3316,7 +3317,7 @@ module Blockd
       if param_name.text_value =~ /\S+\:/
         # return the param-name as a symbol (start with a colon)
         # without the final colon & space, since it's not part of the name
-        name_identifier_pair[:name] = ":#{param_name.text_value[0..-3]}"
+        name_identifier_pair[:name] = ":#{param_name.text_value[0..-2]}"
       end
       name_identifier_pair[:identifier] = param_name_val.value
       return name_identifier_pair
@@ -3349,11 +3350,11 @@ module Blockd
       r6 = _nt_identifier
       s5 << r6
       if r6
-        if input.index(': ', index) == index
-          r7 = instantiate_node(SyntaxNode,input, index...(index + 2))
-          @index += 2
+        if input.index(':', index) == index
+          r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
         else
-          terminal_parse_failure(': ')
+          terminal_parse_failure(':')
           r7 = nil
         end
         s5 << r7
@@ -3372,20 +3373,39 @@ module Blockd
       end
       s1 << r4
       if r4
-        r8 = _nt_identifier
+        s8, i8 = [], index
+        loop do
+          if input.index(' ', index) == index
+            r9 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            terminal_parse_failure(' ')
+            r9 = nil
+          end
+          if r9
+            s8 << r9
+          else
+            break
+          end
+        end
+        r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
         s1 << r8
         if r8
-          s9, i9 = [], index
-          loop do
-            r10 = _nt_ws
-            if r10
-              s9 << r10
-            else
-              break
+          r10 = _nt_identifier
+          s1 << r10
+          if r10
+            s11, i11 = [], index
+            loop do
+              r12 = _nt_ws
+              if r12
+                s11 << r12
+              else
+                break
+              end
             end
+            r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
+            s1 << r11
           end
-          r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
-          s1 << r9
         end
       end
     end
@@ -3400,36 +3420,36 @@ module Blockd
       r0 = r1
       r0.extend(BlockParam3)
     else
-      i11, s11 = index, []
-      s12, i12 = [], index
+      i13, s13 = index, []
+      s14, i14 = [], index
       loop do
-        r13 = _nt_ws
-        if r13
-          s12 << r13
+        r15 = _nt_ws
+        if r15
+          s14 << r15
         else
           break
         end
       end
-      if s12.empty?
-        self.index = i12
-        r12 = nil
+      if s14.empty?
+        self.index = i14
+        r14 = nil
       else
-        r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
+        r14 = instantiate_node(SyntaxNode,input, i14...index, s14)
       end
-      s11 << r12
-      if r12
-        r14 = _nt_identifier
-        s11 << r14
+      s13 << r14
+      if r14
+        r16 = _nt_identifier
+        s13 << r16
       end
-      if s11.last
-        r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
-        r11.extend(BlockParam2)
+      if s13.last
+        r13 = instantiate_node(SyntaxNode,input, i13...index, s13)
+        r13.extend(BlockParam2)
       else
-        self.index = i11
-        r11 = nil
+        self.index = i13
+        r13 = nil
       end
-      if r11
-        r0 = r11
+      if r13
+        r0 = r13
         r0.extend(BlockParam3)
       else
         self.index = i0

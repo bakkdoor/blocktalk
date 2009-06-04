@@ -123,7 +123,7 @@ grammar Blockd do
   rule first_param do
     ':' ' ' first_param_value:(param_value) {
       def value
-        first_param_value
+        {:name => nil, :value => first_param_value.value}
       end
     }
   end
@@ -132,7 +132,8 @@ grammar Blockd do
     param_name ' ' param_value:(param_value) {
       def value
         #[param_name.value, param_value.value]
-        param_value
+        #param_value
+        {:name => param_name.value, :value => param_value.value}
       end
     }
   end
@@ -309,14 +310,14 @@ grammar Blockd do
   end
 
   rule block_param do
-    (ws* param_name:(identifier ': ')? param_name_val:(identifier) (ws*) / (ws+ param_name_val:(identifier))) {
+    (ws* param_name:(identifier ':')? ' '* param_name_val:(identifier) (ws*) / (ws+ param_name_val:(identifier))) {
       def value
         # holds param name (if given) with param value (the identifier in the body of the block)
         name_identifier_pair = {}
         if param_name.text_value =~ /\S+\:/
           # return the param-name as a symbol (start with a colon)
           # without the final colon & space, since it's not part of the name
-          name_identifier_pair[:name] = ":#{param_name.text_value[0..-3]}"
+          name_identifier_pair[:name] = ":#{param_name.text_value[0..-2]}"
         end
         name_identifier_pair[:identifier] = param_name_val.value
         return name_identifier_pair

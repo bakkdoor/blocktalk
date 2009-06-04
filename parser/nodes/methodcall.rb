@@ -3,10 +3,16 @@ module Blockd
     def value
       message_hash = message.value
       message = message_hash[:message]
-      params = message_hash[:params].collect{|p| p.value}
+      param_names = message_hash[:params].collect{|p| p.is_a?(Hash) ? p[:name] : nil}
+      param_values = message_hash[:params].collect{|p| p.is_a?(Hash) ? p[:value] : p.value}
+      message += param_names.join("__")
+
+      if message =~ /new_\S*/
+        message = "new"
+      end
 
       eval_str = "#{receiver.value}.#{message}("
-      eval_str += "#{params.join(', ')}"
+      eval_str += "#{param_values.join(', ')}"
 
       if passed_block.class == Blockd::BlockLiteralNode
         eval_str += "){" # start block

@@ -1,13 +1,6 @@
 module Kernel
   class Codeblock < Proc
 
-    def self.register(codeblock_identifier)
-      @@identifiers ||= []
-      if codeblock_identifier
-        @@identifiers << codeblock_identifier
-      end
-    end
-
     attr_reader :params, :block
 
     def initialize(params = [], &block)

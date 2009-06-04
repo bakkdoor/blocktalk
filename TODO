@@ -1,0 +1,18 @@
+##################
+# TODO for v0.1: #
+##################
+
+- better support for chained method calls, similar to Smalltalk
+- finish support for named arguments
+- add optimizations, when possible
+- add more documentation & enhance standard library (as much as possible in Blocktalk itself)
+- add real support for System#require (be able to load Ruby & Blocktalk code)
+
+ideas: 
+------
+- maybe add a ruby keyword & allow inline ruby code inside it (for std-lib)
+  -> e.g.: %ruby{
+             # inline ruby code here
+           }
+  (another, more simple way would be to simply use strings & Kernel::eval, 
+   but this might not work as well with editors etc.)

@@ -17,7 +17,7 @@ grammar Blockd do
   rule expression do
     (subexpr:(method_definition / return_statement / yield_statement / try_expression / catch_expression / ensure_expression
               /
-              method_call / assignment / literal / subexpression / inline_ruby / comment)
+              super_call / method_call / assignment / literal / subexpression / inline_ruby / comment)
      ('$' / (ws* newline?)))
     <ExpressionNode>
   end
@@ -69,6 +69,13 @@ grammar Blockd do
       end
     }
   end
+
+
+  # call method of superclass (as in ruby)
+  rule super_call do
+    'super' params:(message_params)? <SuperCallNode>
+  end
+
 
   # a method_call is characterized by a receiver, a message and optional parameters:
   # e.g.: receiver message

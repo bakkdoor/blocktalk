@@ -209,32 +209,37 @@ module Blockd
               if r7
                 r1 = r7
               else
-                r8 = _nt_method_call
+                r8 = _nt_super_call
                 if r8
                   r1 = r8
                 else
-                  r9 = _nt_assignment
+                  r9 = _nt_method_call
                   if r9
                     r1 = r9
                   else
-                    r10 = _nt_literal
+                    r10 = _nt_assignment
                     if r10
                       r1 = r10
                     else
-                      r11 = _nt_subexpression
+                      r11 = _nt_literal
                       if r11
                         r1 = r11
                       else
-                        r12 = _nt_inline_ruby
+                        r12 = _nt_subexpression
                         if r12
                           r1 = r12
                         else
-                          r13 = _nt_comment
+                          r13 = _nt_inline_ruby
                           if r13
                             r1 = r13
                           else
-                            self.index = i1
-                            r1 = nil
+                            r14 = _nt_comment
+                            if r14
+                              r1 = r14
+                            else
+                              self.index = i1
+                              r1 = nil
+                            end
                           end
                         end
                       end
@@ -249,53 +254,53 @@ module Blockd
     end
     s0 << r1
     if r1
-      i14 = index
+      i15 = index
       if input.index('$', index) == index
-        r15 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        r16 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
         terminal_parse_failure('$')
-        r15 = nil
+        r16 = nil
       end
-      if r15
-        r14 = r15
+      if r16
+        r15 = r16
       else
-        i16, s16 = index, []
-        s17, i17 = [], index
+        i17, s17 = index, []
+        s18, i18 = [], index
         loop do
-          r18 = _nt_ws
-          if r18
-            s17 << r18
+          r19 = _nt_ws
+          if r19
+            s18 << r19
           else
             break
           end
         end
-        r17 = instantiate_node(SyntaxNode,input, i17...index, s17)
-        s16 << r17
-        if r17
-          r20 = _nt_newline
-          if r20
-            r19 = r20
+        r18 = instantiate_node(SyntaxNode,input, i18...index, s18)
+        s17 << r18
+        if r18
+          r21 = _nt_newline
+          if r21
+            r20 = r21
           else
-            r19 = instantiate_node(SyntaxNode,input, index...index)
+            r20 = instantiate_node(SyntaxNode,input, index...index)
           end
-          s16 << r19
+          s17 << r20
         end
-        if s16.last
-          r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
-          r16.extend(Expression0)
+        if s17.last
+          r17 = instantiate_node(SyntaxNode,input, i17...index, s17)
+          r17.extend(Expression0)
         else
-          self.index = i16
-          r16 = nil
+          self.index = i17
+          r17 = nil
         end
-        if r16
-          r14 = r16
+        if r17
+          r15 = r17
         else
-          self.index = i14
-          r14 = nil
+          self.index = i15
+          r15 = nil
         end
       end
-      s0 << r14
+      s0 << r15
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
@@ -1083,6 +1088,51 @@ module Blockd
     end
 
     node_cache[:assignment][start_index] = r0
+
+    return r0
+  end
+
+  module SuperCall0
+    def params
+      elements[1]
+    end
+  end
+
+  def _nt_super_call
+    start_index = index
+    if node_cache[:super_call].has_key?(index)
+      cached = node_cache[:super_call][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('super', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 5))
+      @index += 5
+    else
+      terminal_parse_failure('super')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      r3 = _nt_message_params
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
+      end
+      s0 << r2
+    end
+    if s0.last
+      r0 = instantiate_node(SuperCallNode,input, i0...index, s0)
+      r0.extend(SuperCall0)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:super_call][start_index] = r0
 
     return r0
   end

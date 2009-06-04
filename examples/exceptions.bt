@@ -9,3 +9,20 @@ try{
     Console puts: "error!"
   }
 }
+
+# lets raise an exception ourselves
+
+Class >> {:WeirdError => StandardError} do
+  def initialize = do |error_message|
+    super: error_message
+  end
+end
+
+try{
+  Console puts: "gonna raise an exception!"
+  Error raise: (WeirdError new: "catch me if you can!")
+
+  catch: WeirdError do |ex|
+    Console puts: "exception caught: #{ex.inspect}"
+  end
+}

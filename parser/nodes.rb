@@ -18,6 +18,7 @@ require "nodes/return"
 require "nodes/root"
 require "nodes/string"
 require "nodes/subexpression"
+require "nodes/super_call"
 require "nodes/try"
 require "nodes/yield"
 

@@ -17,7 +17,7 @@ grammar Blockd do
   rule expression do
     (subexpr:(method_definition / return_statement / yield_statement / try_expression / catch_expression / ensure_expression
               /
-              super_call / method_call / assignment / literal / subexpression / inline_ruby / comment)
+              super_call / multiple_method_call / method_call / assignment / literal / subexpression / inline_ruby / comment)
      ('$' / (ws* newline?)))
     <ExpressionNode>
   end
@@ -76,6 +76,14 @@ grammar Blockd do
     'super' params:(message_params)? <SuperCallNode>
   end
 
+  # calling multiple methods on the same object in a row, seperated by
+  # semicolons (as in smalltalk)
+  rule multiple_method_call do
+    receiver:(message_receiver) ' '
+    messages:(message:(message_with_params / message_without_params) spaces* ';' ws*)+
+      final_message:(message_with_params / message_without_params) ws*
+      <MultipleMethodcallNode>
+  end
 
   # a method_call is characterized by a receiver, a message and optional parameters:
   # e.g.: receiver message

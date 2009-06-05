@@ -213,32 +213,37 @@ module Blockd
                 if r8
                   r1 = r8
                 else
-                  r9 = _nt_method_call
+                  r9 = _nt_multiple_method_call
                   if r9
                     r1 = r9
                   else
-                    r10 = _nt_assignment
+                    r10 = _nt_method_call
                     if r10
                       r1 = r10
                     else
-                      r11 = _nt_literal
+                      r11 = _nt_assignment
                       if r11
                         r1 = r11
                       else
-                        r12 = _nt_subexpression
+                        r12 = _nt_literal
                         if r12
                           r1 = r12
                         else
-                          r13 = _nt_inline_ruby
+                          r13 = _nt_subexpression
                           if r13
                             r1 = r13
                           else
-                            r14 = _nt_comment
+                            r14 = _nt_inline_ruby
                             if r14
                               r1 = r14
                             else
-                              self.index = i1
-                              r1 = nil
+                              r15 = _nt_comment
+                              if r15
+                                r1 = r15
+                              else
+                                self.index = i1
+                                r1 = nil
+                              end
                             end
                           end
                         end
@@ -254,53 +259,53 @@ module Blockd
     end
     s0 << r1
     if r1
-      i15 = index
+      i16 = index
       if input.index('$', index) == index
-        r16 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        r17 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
         terminal_parse_failure('$')
-        r16 = nil
+        r17 = nil
       end
-      if r16
-        r15 = r16
+      if r17
+        r16 = r17
       else
-        i17, s17 = index, []
-        s18, i18 = [], index
+        i18, s18 = index, []
+        s19, i19 = [], index
         loop do
-          r19 = _nt_ws
-          if r19
-            s18 << r19
+          r20 = _nt_ws
+          if r20
+            s19 << r20
           else
             break
           end
         end
-        r18 = instantiate_node(SyntaxNode,input, i18...index, s18)
-        s17 << r18
-        if r18
-          r21 = _nt_newline
-          if r21
-            r20 = r21
+        r19 = instantiate_node(SyntaxNode,input, i19...index, s19)
+        s18 << r19
+        if r19
+          r22 = _nt_newline
+          if r22
+            r21 = r22
           else
-            r20 = instantiate_node(SyntaxNode,input, index...index)
+            r21 = instantiate_node(SyntaxNode,input, index...index)
           end
-          s17 << r20
+          s18 << r21
         end
-        if s17.last
-          r17 = instantiate_node(SyntaxNode,input, i17...index, s17)
-          r17.extend(Expression0)
+        if s18.last
+          r18 = instantiate_node(SyntaxNode,input, i18...index, s18)
+          r18.extend(Expression0)
         else
-          self.index = i17
-          r17 = nil
+          self.index = i18
+          r18 = nil
         end
-        if r17
-          r15 = r17
+        if r18
+          r16 = r18
         else
-          self.index = i15
-          r15 = nil
+          self.index = i16
+          r16 = nil
         end
       end
-      s0 << r15
+      s0 << r16
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
@@ -1133,6 +1138,166 @@ module Blockd
     end
 
     node_cache[:super_call][start_index] = r0
+
+    return r0
+  end
+
+  module MultipleMethodCall0
+    def message
+      elements[0]
+    end
+
+  end
+
+  module MultipleMethodCall1
+    def receiver
+      elements[0]
+    end
+
+    def messages
+      elements[2]
+    end
+
+    def final_message
+      elements[3]
+    end
+
+  end
+
+  def _nt_multiple_method_call
+    start_index = index
+    if node_cache[:multiple_method_call].has_key?(index)
+      cached = node_cache[:multiple_method_call][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_message_receiver
+    s0 << r1
+    if r1
+      if input.index(' ', index) == index
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure(' ')
+        r2 = nil
+      end
+      s0 << r2
+      if r2
+        s3, i3 = [], index
+        loop do
+          i4, s4 = index, []
+          i5 = index
+          r6 = _nt_message_with_params
+          if r6
+            r5 = r6
+          else
+            r7 = _nt_message_without_params
+            if r7
+              r5 = r7
+            else
+              self.index = i5
+              r5 = nil
+            end
+          end
+          s4 << r5
+          if r5
+            s8, i8 = [], index
+            loop do
+              r9 = _nt_spaces
+              if r9
+                s8 << r9
+              else
+                break
+              end
+            end
+            r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+            s4 << r8
+            if r8
+              if input.index(';', index) == index
+                r10 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                @index += 1
+              else
+                terminal_parse_failure(';')
+                r10 = nil
+              end
+              s4 << r10
+              if r10
+                s11, i11 = [], index
+                loop do
+                  r12 = _nt_ws
+                  if r12
+                    s11 << r12
+                  else
+                    break
+                  end
+                end
+                r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
+                s4 << r11
+              end
+            end
+          end
+          if s4.last
+            r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+            r4.extend(MultipleMethodCall0)
+          else
+            self.index = i4
+            r4 = nil
+          end
+          if r4
+            s3 << r4
+          else
+            break
+          end
+        end
+        if s3.empty?
+          self.index = i3
+          r3 = nil
+        else
+          r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+        end
+        s0 << r3
+        if r3
+          i13 = index
+          r14 = _nt_message_with_params
+          if r14
+            r13 = r14
+          else
+            r15 = _nt_message_without_params
+            if r15
+              r13 = r15
+            else
+              self.index = i13
+              r13 = nil
+            end
+          end
+          s0 << r13
+          if r13
+            s16, i16 = [], index
+            loop do
+              r17 = _nt_ws
+              if r17
+                s16 << r17
+              else
+                break
+              end
+            end
+            r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
+            s0 << r16
+          end
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(MultipleMethodcallNode,input, i0...index, s0)
+      r0.extend(MultipleMethodCall1)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:multiple_method_call][start_index] = r0
 
     return r0
   end

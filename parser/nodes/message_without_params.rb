@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class MessageWithoutParamsNode < Treetop::Runtime::SyntaxNode
     def value
       {

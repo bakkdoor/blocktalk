@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class YieldNode < Treetop::Runtime::SyntaxNode
     def value
 #       array_str =  yieldval.value

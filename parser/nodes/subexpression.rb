@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class SubexpressionNode < Treetop::Runtime::SyntaxNode
     def value
       subexpr.value

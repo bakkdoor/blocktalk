@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class SuperCallNode < Treetop::Runtime::SyntaxNode
     def value
       params_str = ""

@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class MessageWithParamsNode < Treetop::Runtime::SyntaxNode
     def value
       { :message => message.value,

@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class CommentNode < Treetop::Runtime::SyntaxNode
     def value
       nil

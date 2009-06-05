@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class CatchNode < Treetop::Runtime::SyntaxNode
     def value
       if self.text_value.match(/catch\: \S+/)

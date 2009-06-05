@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class RootNode < Treetop::Runtime::SyntaxNode
     def evaluate
       self.value

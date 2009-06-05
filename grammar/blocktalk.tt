@@ -1,7 +1,7 @@
-grammar Blockd do
+grammar Blocktalk do
   # starting point for the parser.
-  # a blockd programm consists of expressions & comments.
-  rule blockd_programm do
+  # a blocktalk programm consists of expressions & comments.
+  rule blocktalk_programm do
     ws* exprs:(expression)* ws* <RootNode>
   end
 
@@ -15,9 +15,13 @@ grammar Blockd do
   # an expression is one of the following:
   # assignment, method_call, literal or subexpression
   rule expression do
-    (subexpr:(method_definition / return_statement / yield_statement / try_expression / catch_expression / ensure_expression
+    (subexpr:(method_definition / require_statement / return_statement
               /
-              super_call / multiple_method_call / method_call / assignment / literal / subexpression / inline_ruby / comment)
+              yield_statement / try_expression / catch_expression / ensure_expression
+              /
+              super_call / multiple_method_call / method_call / assignment / literal
+              /
+              subexpression / inline_ruby / comment)
      ('$' / (ws* newline?)))
     <ExpressionNode>
   end
@@ -28,6 +32,10 @@ grammar Blockd do
       /
     spaces* 'def' spaces+  'self ' method_name:(message_name) ws* '=' ws* method_body:(block_literal)
     <ClassMethodDefinitionNode>
+  end
+
+  rule require_statement do
+    'require:' spaces+ parse_file:string_literal <RequireNode>
   end
 
   rule return_statement do

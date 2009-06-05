@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class IdentifierNode < Treetop::Runtime::SyntaxNode
     def value
       self.text_value

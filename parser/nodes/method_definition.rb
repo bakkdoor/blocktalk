@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class MethodDefinitionNode < Treetop::Runtime::SyntaxNode
     def value
       if method_body.params.respond_to?(:value)

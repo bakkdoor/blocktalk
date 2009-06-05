@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class MethodcallNode < Treetop::Runtime::SyntaxNode
     def value
       message_hash = message.value
@@ -14,7 +14,7 @@ module Blockd
       eval_str = "#{receiver.value}.#{message}("
       eval_str += "#{param_values.join(', ')}"
 
-      if passed_block.class == Blockd::BlockLiteralNode
+      if passed_block.class == Blocktalk::BlockLiteralNode
         eval_str += "){" # start block
 
         # check for block_params

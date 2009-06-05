@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class BlockLiteralNode < Treetop::Runtime::SyntaxNode
     def value
       block_str = "Codeblock.new("

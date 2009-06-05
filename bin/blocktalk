@@ -36,7 +36,7 @@ end
 
 
 parse_file = ARGV[0]
-parser = BlockdParser.new
+parser = BlocktalkParser.new
 ast = parser.parse IO.read(parse_file)
 
 # start evaluation process

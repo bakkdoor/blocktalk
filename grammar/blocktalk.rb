@@ -1,21 +1,21 @@
-module Blockd
+module Blocktalk
   include Treetop::Runtime
 
   def root
-    @root || :blockd_programm
+    @root || :blocktalk_programm
   end
 
-  module BlockdProgramm0
+  module BlocktalkProgramm0
     def exprs
       elements[1]
     end
 
   end
 
-  def _nt_blockd_programm
+  def _nt_blocktalk_programm
     start_index = index
-    if node_cache[:blockd_programm].has_key?(index)
-      cached = node_cache[:blockd_programm][index]
+    if node_cache[:blocktalk_programm].has_key?(index)
+      cached = node_cache[:blocktalk_programm][index]
       @index = cached.interval.end if cached
       return cached
     end
@@ -60,13 +60,13 @@ module Blockd
     end
     if s0.last
       r0 = instantiate_node(RootNode,input, i0...index, s0)
-      r0.extend(BlockdProgramm0)
+      r0.extend(BlocktalkProgramm0)
     else
       self.index = i0
       r0 = nil
     end
 
-    node_cache[:blockd_programm][start_index] = r0
+    node_cache[:blocktalk_programm][start_index] = r0
 
     return r0
   end
@@ -189,60 +189,65 @@ module Blockd
     if r2
       r1 = r2
     else
-      r3 = _nt_return_statement
+      r3 = _nt_require_statement
       if r3
         r1 = r3
       else
-        r4 = _nt_yield_statement
+        r4 = _nt_return_statement
         if r4
           r1 = r4
         else
-          r5 = _nt_try_expression
+          r5 = _nt_yield_statement
           if r5
             r1 = r5
           else
-            r6 = _nt_catch_expression
+            r6 = _nt_try_expression
             if r6
               r1 = r6
             else
-              r7 = _nt_ensure_expression
+              r7 = _nt_catch_expression
               if r7
                 r1 = r7
               else
-                r8 = _nt_super_call
+                r8 = _nt_ensure_expression
                 if r8
                   r1 = r8
                 else
-                  r9 = _nt_multiple_method_call
+                  r9 = _nt_super_call
                   if r9
                     r1 = r9
                   else
-                    r10 = _nt_method_call
+                    r10 = _nt_multiple_method_call
                     if r10
                       r1 = r10
                     else
-                      r11 = _nt_assignment
+                      r11 = _nt_method_call
                       if r11
                         r1 = r11
                       else
-                        r12 = _nt_literal
+                        r12 = _nt_assignment
                         if r12
                           r1 = r12
                         else
-                          r13 = _nt_subexpression
+                          r13 = _nt_literal
                           if r13
                             r1 = r13
                           else
-                            r14 = _nt_inline_ruby
+                            r14 = _nt_subexpression
                             if r14
                               r1 = r14
                             else
-                              r15 = _nt_comment
+                              r15 = _nt_inline_ruby
                               if r15
                                 r1 = r15
                               else
-                                self.index = i1
-                                r1 = nil
+                                r16 = _nt_comment
+                                if r16
+                                  r1 = r16
+                                else
+                                  self.index = i1
+                                  r1 = nil
+                                end
                               end
                             end
                           end
@@ -259,53 +264,53 @@ module Blockd
     end
     s0 << r1
     if r1
-      i16 = index
+      i17 = index
       if input.index('$', index) == index
-        r17 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        r18 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
         terminal_parse_failure('$')
-        r17 = nil
+        r18 = nil
       end
-      if r17
-        r16 = r17
+      if r18
+        r17 = r18
       else
-        i18, s18 = index, []
-        s19, i19 = [], index
+        i19, s19 = index, []
+        s20, i20 = [], index
         loop do
-          r20 = _nt_ws
-          if r20
-            s19 << r20
+          r21 = _nt_ws
+          if r21
+            s20 << r21
           else
             break
           end
         end
-        r19 = instantiate_node(SyntaxNode,input, i19...index, s19)
-        s18 << r19
-        if r19
-          r22 = _nt_newline
-          if r22
-            r21 = r22
+        r20 = instantiate_node(SyntaxNode,input, i20...index, s20)
+        s19 << r20
+        if r20
+          r23 = _nt_newline
+          if r23
+            r22 = r23
           else
-            r21 = instantiate_node(SyntaxNode,input, index...index)
+            r22 = instantiate_node(SyntaxNode,input, index...index)
           end
-          s18 << r21
+          s19 << r22
         end
-        if s18.last
-          r18 = instantiate_node(SyntaxNode,input, i18...index, s18)
-          r18.extend(Expression0)
+        if s19.last
+          r19 = instantiate_node(SyntaxNode,input, i19...index, s19)
+          r19.extend(Expression0)
         else
-          self.index = i18
-          r18 = nil
+          self.index = i19
+          r19 = nil
         end
-        if r18
-          r16 = r18
+        if r19
+          r17 = r19
         else
-          self.index = i16
-          r16 = nil
+          self.index = i17
+          r17 = nil
         end
       end
-      s0 << r16
+      s0 << r17
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
@@ -553,6 +558,64 @@ module Blockd
     end
 
     node_cache[:method_definition][start_index] = r0
+
+    return r0
+  end
+
+  module RequireStatement0
+    def parse_file
+      elements[2]
+    end
+  end
+
+  def _nt_require_statement
+    start_index = index
+    if node_cache[:require_statement].has_key?(index)
+      cached = node_cache[:require_statement][index]
+      @index = cached.interval.end if cached
+      return cached
+    end
+
+    i0, s0 = index, []
+    if input.index('require:', index) == index
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 8))
+      @index += 8
+    else
+      terminal_parse_failure('require:')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      s2, i2 = [], index
+      loop do
+        r3 = _nt_spaces
+        if r3
+          s2 << r3
+        else
+          break
+        end
+      end
+      if s2.empty?
+        self.index = i2
+        r2 = nil
+      else
+        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+      end
+      s0 << r2
+      if r2
+        r4 = _nt_string_literal
+        s0 << r4
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(RequireNode,input, i0...index, s0)
+      r0.extend(RequireStatement0)
+    else
+      self.index = i0
+      r0 = nil
+    end
+
+    node_cache[:require_statement][start_index] = r0
 
     return r0
   end
@@ -4812,7 +4875,7 @@ module Blockd
 
 end
 
-class BlockdParser < Treetop::Runtime::CompiledParser
-  include Blockd
+class BlocktalkParser < Treetop::Runtime::CompiledParser
+  include Blocktalk
 end
 

@@ -1,0 +1,8 @@
+# requiring Ruby code & libraries works like this:
+System require: "socket"
+
+# requiring Blocktalk code like this:
+require: "examples/exceptions.bt"
+
+Console puts: "back in require.bt"
+

@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class MultipleMethodcallNode < Treetop::Runtime::SyntaxNode
     def value
       eval_str = ""

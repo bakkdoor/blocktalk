@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class StringLiteralNode < Treetop::Runtime::SyntaxNode
     def value
       "\"" + self.string_val.elements.collect{|e| e.value}.join("") + "\""

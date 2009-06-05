@@ -1,4 +1,4 @@
-module Blockd
+module Blocktalk
   class ReturnNode < Treetop::Runtime::SyntaxNode
     def value
       "return #{ret_val.value}"

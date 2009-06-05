@@ -1,0 +1,20 @@
+# calling some ruby methods...
+
+File open: "examples/test3.bt" mode: "r" do |f|
+  (f readlines) each do |l|
+    Console puts: l
+  end
+end
+
+# and again, this time cached!
+File open: "examples/test3.bt" mode: "r" do |f|
+  (f readlines) each do |l|
+    Console puts: l
+  end
+end
+
+
+str = "hello, world, how are you?"
+str2 = str gsub: "," with: "!"
+Console puts: str;
+        puts: str2

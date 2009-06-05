@@ -3,11 +3,8 @@
 ##################
 
 - better support for chained method calls, similar to Smalltalk
-- finish support for named arguments (done)
-  - also add support for calling standard ruby methods with more than one argument
 - add optimizations, when possible
 - add more documentation & enhance standard library (as much as possible in Blocktalk itself)
-- add real support for System#require (be able to load Ruby & Blocktalk code)
 
 ideas: 
 ------

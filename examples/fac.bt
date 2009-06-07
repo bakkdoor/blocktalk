@@ -1,0 +1,23 @@
+Fixnum class_eval do
+  def fac_slow = do
+    (self == 1) if_true: {
+      1
+    } if_false: {
+      (self * ((self - 1) fac_slow))
+    }
+  end
+
+  def fac_fast = do
+    val = self
+    acc = val
+    {val > 1} while_true {
+      val = val - 1
+      acc = acc * val
+    }
+    return acc
+  end
+end
+
+Console puts: (289 fac_slow)
+Console puts
+Console puts: (289 fac_fast)

@@ -2,6 +2,7 @@ $: << File.expand_path(File.dirname(__FILE__))
 
 #require helpers first
 require "helpers/methodcalls"
+require "helpers/method_definitions"
 
 require "nodes/block_literal"
 require "nodes/catch"

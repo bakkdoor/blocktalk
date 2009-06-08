@@ -1,21 +1,15 @@
 module Blocktalk
   class MethodDefinitionNode < Treetop::Runtime::SyntaxNode
+    include ASTHelpers::MethodDefinitions
+
     def value
       if method_body.params.respond_to?(:value)
         params_val = method_body.params.value
-        method_name_val = method_name.value
         param_names = params_val.collect{|p| p[:name].to_s[1..-1] if p[:name]}.reject{|p| p.nil?}
 
-        # methods with more than one parameter have names including
-        # the additional param-names, e.g.:
-        # def goto = do |place with: vehicle| ... end
-        # becomes: def goto_with(place, vehicle) ... end
-        if param_names.size > 0
-          method_name_val += "__" + param_names.join("__")
-        end
+        method_name_val = ruby_method(method_name, method_body.params)
 
         eval_str = ""
-
         # check for constructor definition
         # if we have a method called "initialize_*", we create the
         # initialize method (ruby constructor) and inside call the

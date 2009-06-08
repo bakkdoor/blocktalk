@@ -1,0 +1,13 @@
+str = "hello, world"
+str2 = str upcase gsub: "," with: "::" downcase gsub: " " with: "--"
+Console puts: str2
+
+10 < 5 if_true {
+  Console puts: "yoo"
+} if_false {
+  Console puts: "noo"
+}
+
+(1 < 4) if_true {
+  Console puts: "1 < 4"
+}

@@ -1372,15 +1372,47 @@ module Blocktalk
   end
 
   module MethodCall1
+    def passed_block
+      elements[1]
+    end
+  end
+
+  module MethodCall2
+    def block_var_name
+      elements[1]
+    end
+  end
+
+  module MethodCall3
+    def passed_block
+      elements[1]
+    end
+  end
+
+  module MethodCall4
+    def message
+      elements[1]
+    end
+
+    def passed_block_with_ws
+      elements[2]
+    end
+  end
+
+  module MethodCall5
     def receiver
       elements[0]
     end
 
-    def message
+    def first_message
       elements[2]
     end
 
-    def passed_block
+    def first_passed_block_with_ws
+      elements[3]
+    end
+
+    def messages
       elements[4]
     end
   end
@@ -1426,11 +1458,65 @@ module Blocktalk
         end
         s0 << r3
         if r3
+          i8, s8 = index, []
           if input.index(' ', index) == index
-            r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            r10 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
             terminal_parse_failure(' ')
+            r10 = nil
+          end
+          if r10
+            r9 = r10
+          else
+            r9 = instantiate_node(SyntaxNode,input, index...index)
+          end
+          s8 << r9
+          if r9
+            i11 = index
+            r12 = _nt_block_literal_do_end
+            if r12
+              r11 = r12
+            else
+              r13 = _nt_block_literal_curly_braces
+              if r13
+                r11 = r13
+              else
+                i14, s14 = index, []
+                if input.index('&', index) == index
+                  r15 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                  @index += 1
+                else
+                  terminal_parse_failure('&')
+                  r15 = nil
+                end
+                s14 << r15
+                if r15
+                  r16 = _nt_identifier
+                  s14 << r16
+                end
+                if s14.last
+                  r14 = instantiate_node(SyntaxNode,input, i14...index, s14)
+                  r14.extend(MethodCall0)
+                else
+                  self.index = i14
+                  r14 = nil
+                end
+                if r14
+                  r11 = r14
+                else
+                  self.index = i11
+                  r11 = nil
+                end
+              end
+            end
+            s8 << r11
+          end
+          if s8.last
+            r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+            r8.extend(MethodCall1)
+          else
+            self.index = i8
             r8 = nil
           end
           if r8
@@ -1440,56 +1526,124 @@ module Blocktalk
           end
           s0 << r7
           if r7
-            i10 = index
-            r11 = _nt_block_literal_do_end
-            if r11
-              r10 = r11
-            else
-              r12 = _nt_block_literal_curly_braces
-              if r12
-                r10 = r12
+            s17, i17 = [], index
+            loop do
+              i18, s18 = index, []
+              if input.index(' ', index) == index
+                r19 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                @index += 1
               else
-                i13, s13 = index, []
-                if input.index('&', index) == index
-                  r14 = instantiate_node(SyntaxNode,input, index...(index + 1))
-                  @index += 1
+                terminal_parse_failure(' ')
+                r19 = nil
+              end
+              s18 << r19
+              if r19
+                i20 = index
+                r21 = _nt_message_with_params
+                if r21
+                  r20 = r21
                 else
-                  terminal_parse_failure('&')
-                  r14 = nil
+                  r22 = _nt_message_without_params
+                  if r22
+                    r20 = r22
+                  else
+                    self.index = i20
+                    r20 = nil
+                  end
                 end
-                s13 << r14
-                if r14
-                  r15 = _nt_identifier
-                  s13 << r15
-                end
-                if s13.last
-                  r13 = instantiate_node(SyntaxNode,input, i13...index, s13)
-                  r13.extend(MethodCall0)
-                else
-                  self.index = i13
-                  r13 = nil
-                end
-                if r13
-                  r10 = r13
-                else
-                  self.index = i10
-                  r10 = nil
+                s18 << r20
+                if r20
+                  i24, s24 = index, []
+                  if input.index(' ', index) == index
+                    r26 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                    @index += 1
+                  else
+                    terminal_parse_failure(' ')
+                    r26 = nil
+                  end
+                  if r26
+                    r25 = r26
+                  else
+                    r25 = instantiate_node(SyntaxNode,input, index...index)
+                  end
+                  s24 << r25
+                  if r25
+                    i27 = index
+                    r28 = _nt_block_literal_do_end
+                    if r28
+                      r27 = r28
+                    else
+                      r29 = _nt_block_literal_curly_braces
+                      if r29
+                        r27 = r29
+                      else
+                        i30, s30 = index, []
+                        if input.index('&', index) == index
+                          r31 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                          @index += 1
+                        else
+                          terminal_parse_failure('&')
+                          r31 = nil
+                        end
+                        s30 << r31
+                        if r31
+                          r32 = _nt_identifier
+                          s30 << r32
+                        end
+                        if s30.last
+                          r30 = instantiate_node(SyntaxNode,input, i30...index, s30)
+                          r30.extend(MethodCall2)
+                        else
+                          self.index = i30
+                          r30 = nil
+                        end
+                        if r30
+                          r27 = r30
+                        else
+                          self.index = i27
+                          r27 = nil
+                        end
+                      end
+                    end
+                    s24 << r27
+                  end
+                  if s24.last
+                    r24 = instantiate_node(SyntaxNode,input, i24...index, s24)
+                    r24.extend(MethodCall3)
+                  else
+                    self.index = i24
+                    r24 = nil
+                  end
+                  if r24
+                    r23 = r24
+                  else
+                    r23 = instantiate_node(SyntaxNode,input, index...index)
+                  end
+                  s18 << r23
                 end
               end
+              if s18.last
+                r18 = instantiate_node(SyntaxNode,input, i18...index, s18)
+                r18.extend(MethodCall4)
+              else
+                self.index = i18
+                r18 = nil
+              end
+              if r18
+                s17 << r18
+              else
+                break
+              end
             end
-            if r10
-              r9 = r10
-            else
-              r9 = instantiate_node(SyntaxNode,input, index...index)
-            end
-            s0 << r9
+            r17 = instantiate_node(SyntaxNode,input, i17...index, s17)
+            s0 << r17
           end
         end
       end
     end
     if s0.last
       r0 = instantiate_node(MethodcallNode,input, i0...index, s0)
-      r0.extend(MethodCall1)
+      r0.extend(MethodCall5)
     else
       self.index = i0
       r0 = nil
@@ -1529,13 +1683,8 @@ module Blocktalk
       if r4
         r0 = r4
       else
-        r5 = _nt_message_without_params
-        if r5
-          r0 = r5
-        else
-          self.index = i0
-          r0 = nil
-        end
+        self.index = i0
+        r0 = nil
       end
     end
 

@@ -15,9 +15,9 @@ grammar Blocktalk do
   # an expression is one of the following:
   # assignment, method_call, literal or subexpression
   rule expression do
-    (subexpr:(method_definition / require_statement / return_statement
+    (subexpr:(method_definition / require_statement / return_statement / yield_statement
               /
-              yield_statement / try_expression / catch_expression / ensure_expression
+              try_expression / catch_expression / ensure_expression
               /
               super_call / multiple_method_call / method_call / assignment / literal
               /
@@ -97,10 +97,17 @@ grammar Blocktalk do
   # e.g.: receiver message
   #       receiver message: param_value
   #       receiver message: param1_value param2: param2_value ...
+  # additionally, a method call can be chained as in:
+  # obj message1 message2 message3: param1 ...
+  # equivalent to this ruby code:
+  # obj.message1().message2().message3(param1) ...
   rule method_call do
     receiver:(message_receiver) ' '
-    message:(operator_message / message_with_params / message_without_params) ' '?
-    passed_block:(block_literal_do_end / block_literal_curly_braces / '&' block_var_name:identifier)?
+    first_message:(operator_message / message_with_params / message_without_params)
+    first_passed_block_with_ws:(' '? passed_block:(block_literal_do_end / block_literal_curly_braces / '&' block_var_name:identifier))?
+    messages:(' ' message:(message_with_params / message_without_params)
+              passed_block_with_ws:(' '?
+                                    passed_block:(block_literal_do_end / block_literal_curly_braces / '&' block_var_name:identifier))?)*
     <MethodcallNode>
   end
 
@@ -109,7 +116,7 @@ grammar Blocktalk do
   # - literals, e.g. 123, 123.456, [1,2,3], {:a => 1, :b => 2}, "hello world", ?C etc.
   # subexpressions, e.g. (3 + 4), ("foo" to_sym) etc.
   rule message_receiver do
-    (literal / identifier) / subexpression / message_without_params
+    (literal / identifier) / subexpression
   end
 
   # a message with parameters passed to it should look like this:

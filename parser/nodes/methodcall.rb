@@ -1,47 +1,37 @@
 module Blocktalk
   class MethodcallNode < Treetop::Runtime::SyntaxNode
+    include ASTHelpers::Methodcalls
     def value
-      message_hash = message.value
-      message = message_hash[:message]
-      param_names = message_hash[:params].collect{|p| p.is_a?(Hash) ? p[:name] : nil}
-      param_values = message_hash[:params].collect{|p| p.is_a?(Hash) ? p[:value] : p.value}
-      message += param_names.join("__")
+      first_messagecall = ""
 
-      if message =~ /new_\S*/
-        message = "new"
-      end
-
-      eval_str = "#{receiver.value}.#{message}("
-      eval_str += "#{param_values.join(', ')}"
-
-      if passed_block.class == Blocktalk::BlockLiteralNode
-        eval_str += "){" # start block
-
-        # check for block_params
-        if passed_block.params.respond_to?(:value)
-          eval_str += "|"
-          eval_str +=
-            passed_block.params.value.collect{|p| p[:identifier]}.join(",")
-          eval_str += "| "
-        end
-
-        eval_str += passed_block.body.value # insert block-body
-        eval_str += "}" # end block
-
-      elsif passed_block.text_value =~ /&\S+/
-        # check for Proc-Objects passed to method as block
-        if params.size > 0
-          eval_str += ", "
-        end
-        eval_str += "&"
-        eval_str += passed_block.block_var_name.value
-        eval_str += ")"
+      if looks_like_block?(first_passed_block_with_ws)
+        first_messagecall = generate_methodcall(receiver,
+                                                first_message,
+                                                first_passed_block_with_ws.passed_block)
       else
-        # no block given -> method call is finished
-        eval_str += ")"
+        first_messagecall = generate_methodcall(receiver, first_message)
       end
 
-      return eval_str
+      chained_methodcalls = first_messagecall
+
+      messages.elements.each do |whitespace_with_message|
+        ws_w_msg = whitespace_with_message
+        chained_methodcalls =
+          if looks_like_block?(ws_w_msg.passed_block_with_ws)
+            generate_methodcall(chained_methodcalls,
+                                ws_w_msg.message,
+                                ws_w_msg.passed_block_with_ws.passed_block)
+          else
+            generate_methodcall(chained_methodcalls,
+                                ws_w_msg.message)
+          end
+      end
+
+      chained_methodcalls
+    end
+
+    def looks_like_block?(node)
+      node.text_value =~ /(\{|do)/
     end
   end
 end

@@ -1,5 +1,8 @@
 $: << File.expand_path(File.dirname(__FILE__))
 
+#require helpers first
+require "helpers/methodcalls"
+
 require "nodes/block_literal"
 require "nodes/catch"
 require "nodes/class_method_definition"
@@ -23,4 +26,3 @@ require "nodes/subexpression"
 require "nodes/super_call"
 require "nodes/try"
 require "nodes/yield"
-

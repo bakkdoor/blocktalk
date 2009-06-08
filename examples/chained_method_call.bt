@@ -1,5 +1,7 @@
+require: "lib/blocktalk/string"
+
 str = "hello, world"
-str2 = str upcase gsub: "," with: "::" downcase gsub: " " with: "--"
+str2 = str upcase substitute: "," with: "::" downcase substitute: " " with: "--"
 Console puts: str2
 
 10 < 5 if_true {

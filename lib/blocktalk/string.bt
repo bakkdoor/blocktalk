@@ -1,0 +1,9 @@
+Class >> :String do
+  def substitute = do |string with: subst_string|
+    self gsub: string with: subst_string
+  end
+
+  def substitute! = do |string with: subst_string|
+    self gsub!: string with: subst_string
+  end
+end

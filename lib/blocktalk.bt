@@ -1,0 +1,3 @@
+# blocktalk standard library files
+
+require: "blocktalk/array"

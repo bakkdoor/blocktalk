@@ -1,0 +1,60 @@
+Class >> :Array do
+  %ruby{
+    alias_method :insert_original, :insert
+    alias_method :push_original, :push
+    alias_method :unshift_original, :unshift
+    alias_method :values_at_original, :values_at
+    alias_method :zip_original, :zip
+  }%
+
+  def rest = do
+    %ruby{
+      self[0..-1]
+    }%
+  end
+
+  def at = do |index put: value|
+    %ruby{
+      self[index] = value
+    }%
+  end
+
+  def insert = do |index_obj_arr|
+    %ruby{
+      self.insert_original(*index_obj_arr.flatten)
+    }%
+  end
+
+  def push = do |obj_arr|
+    %ruby{
+      if obj_arr.is_a?(Array)
+        self.push_original(*obj_arr)
+      else
+        self.push_original(obj_arr)
+      end
+    }%
+  end
+
+  def unshift = do |obj_arr|
+    %ruby{
+      if obj_arr.is_a?(Array)
+        self.unshift_original(*obj_arr)
+      else
+        self.unshift_original(obj_arr)
+      end
+    }%
+  end
+
+  def values_at = do |selector_arr|
+    %ruby{
+      self.values_at_original(*selector_arr)
+    }%
+  end
+
+  def zip = do |arg_arr|
+    %ruby{
+      self.zip_original(*arg_arr)
+    }%
+  end
+
+end

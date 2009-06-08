@@ -4,10 +4,12 @@ class Class
   end
 
   def self.in__subclassing(class_name_sym, superclass = Object, &block)
-    if Kernel::constants.include?(class_name_sym.to_s)
+    # try to find class via const_get
+    # if error occurs (not found), define a new class with the given name
+    begin
       classobj = Kernel::const_get(class_name_sym)
       classobj.class_eval(&block)
-    else
+    rescue
       Kernel::const_set(class_name_sym, Class.new(superclass, &block))
     end
   end

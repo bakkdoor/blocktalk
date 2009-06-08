@@ -3,10 +3,6 @@
 require "rubygems"
 require "treetop"
 
-# expand search path correct subdir.
-$: << File.expand_path(File.dirname(__FILE__) + "/../")
-
-
 if ARGV.size < 1
   puts "Error: Please specify a source file to interpret.\n\n"
   puts "Usage:\nblocktalk source.bt [--debug / --ruby]"

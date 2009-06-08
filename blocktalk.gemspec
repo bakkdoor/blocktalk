@@ -6,9 +6,11 @@ $gemspec = Gem::Specification.new do |s|
   s.homepage = "http://www.adztec-independent.de"
   s.platform = Gem::Platform::RUBY
   s.summary = "Blocktalk is a dynamic, object-oriented programming language somewhat in the tradition of Smalltalk and Ruby."
-  s.files = ["README.markdown", "benchmark.bt", "TODO", "{lib,bin,examples,language-spec,parser}/**/*"].map{|p| Dir[p]}.flatten
+  s.files = ["README.markdown", "benchmark.bt", "TODO", "LICENSE", "evaluator.rb",
+             "{grammar,lib,bin,examples,language-spec,parser}/**/*"].map{|p| Dir[p]}.flatten
   s.bindir = "bin"
   s.executables = ["blocktalk"]
+  s.require_path = ''
   s.has_rdoc = false
   s.add_dependency "treetop"
 end

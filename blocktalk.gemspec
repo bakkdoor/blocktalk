@@ -15,7 +15,7 @@ $gemspec = Gem::Specification.new do |s|
              "lib/kernel/system.rb", "lib/kernel/object.rb", "lib/blocktalk", "lib/blocktalk/string.bt",
              "lib/blocktalk/array.bt", "lib/blocktalk.bt",
              "bin/blocktalk",
-             "examples/webserver.bt", "examples/test3.bt", "examples/fac.bt", "examples/chained_method_call.bt", "examples/exceptions.bt",
+             "examples/test3.bt", "examples/fac.bt", "examples/chained_method_call.bt", "examples/exceptions.bt",
              "examples/string_interpol.bt", "examples/test2.bt", "examples/ruby_methods.bt", "examples/multiple_methodcall.bt",
              "examples/linecounter.bt", "examples/require.bt", "examples/portscan.bt", "examples/classes_modules.bt",
              "examples/test.bt", "examples/string_test.bt", "examples/inline_ruby.bt",

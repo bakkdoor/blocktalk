@@ -6,6 +6,14 @@ require "treetop"
 # expand search path correct subdir.
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 
+
+if ARGV.size < 1
+  puts "Error: Please specify a source file to interpret.\n\n"
+  puts "Usage:\nblocktalk source.bt [--debug / --ruby]"
+  exit
+end
+
+
 load_path = ""
 
 if ARGV.join(" ").match(/\-I\s*(\S+)/)
@@ -29,11 +37,6 @@ else
   # load pregenerated parser (faster)
   require load_path + "grammar/blocktalk"
 end
-
-if ARGV.size < 1
-  raise "Error: Please specify a source file to interpret."
-end
-
 
 parse_file = ARGV[0]
 parser = BlocktalkParser.new

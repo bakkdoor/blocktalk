@@ -36,7 +36,15 @@ end
 
 parse_file = ARGV[0]
 parser = BlocktalkParser.new
+
 ast = parser.parse IO.read(parse_file)
+
+# if parsig failed -> output error message with reason
+unless ast
+  puts "ParseError in #{parse_file} (line #{parser.failure_line} / #{parser.failure_column}):"
+  puts "#{parser.failure_reason}"
+  exit
+end
 
 # start evaluation process
 ast.evaluate

@@ -9,7 +9,6 @@ if ARGV.size < 1
   exit
 end
 
-
 load_path = ""
 
 if ARGV.join(" ") =~ /\-I\s*(\S+)/
@@ -23,14 +22,22 @@ ruby_implementation = "ruby"
 if ARGV.join(" ") =~ /\--rubyimp (\S+)/
   ruby_implementation = $1
   puts "Using #{ruby_implementation} for Blocktalk"
+
+  # remove option from argv, since it's not used anymore:
+  idx = ARGV.index("--rubyimp")
+  ARGV.delete_at(idx)
+  ARGV.delete_at(idx) # rubyimp argument now is at this index
 end
 
 require load_path + "lib/core"
 require load_path + "evaluator"
 require load_path + "parser/nodes"
+require load_path + "version"
 
-require "pp"
-
+if ARGV.include?("--version") || ARGV.include?("-v")
+  puts "blocktalk v#{blocktalk_version}"
+  exit
+end
 
 parser_dynamic = ARGV.include?("--dynparser")
 

@@ -12,9 +12,17 @@ end
 
 load_path = ""
 
-if ARGV.join(" ").match(/\-I\s*(\S+)/)
+if ARGV.join(" ") =~ /\-I\s*(\S+)/
   $: << File.expand_path($1)
   load_path = $1 + "/"
+end
+
+# ruby 1.8 is default
+ruby_implementation = "ruby"
+
+if ARGV.join(" ") =~ /\--rubyimp (\S+)/
+  ruby_implementation = $1
+  puts "Using #{ruby_implementation} for Blocktalk"
 end
 
 require load_path + "lib/core"
@@ -68,7 +76,7 @@ if ruby_output
 else
   # also pass any additional args in ARGV to Evaluator
   # (ARGV[0] is the name of the file to execute).
-  Evaluator.eval(ARGV[1..-1])
+  Evaluator.eval(ruby_implementation, ARGV[1..-1])
 
   if debug_on
     puts

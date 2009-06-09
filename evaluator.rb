@@ -8,9 +8,9 @@ class Evaluator
     end
   end
 
-  def self.eval(argv = [])
+  def self.eval(ruby_implementation = "ruby", argv = [])
 #    Kernel::eval @expressions.join(";")
-    system("/usr/bin/env ruby -e '#{@expressions.join(';')}' #{argv.join(' ')}")
+    system("/usr/bin/env #{ruby_implementation} -e '#{@expressions.join(';')}' #{argv.join(' ')}")
   end
 
   def self.inspect

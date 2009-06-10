@@ -47,7 +47,7 @@ Class >> :Person {
 
   def distance_to = do |place|
     (place is_a?: Place) if_true: {
-      dist = ((self place) coordinates) - (place coordinates)
+      dist = (self place coordinates) - (place coordinates)
       dist abs
     } if_false: {
       0.0

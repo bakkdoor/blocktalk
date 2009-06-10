@@ -1,8 +1,8 @@
-i = (Kernel gets)
+i = Console gets: "Please enter a number:"
 
 Console puts: i
 
-((i to_i) < 10) if_true: {
+(i to_i) < 10 if_true: {
   Console puts: "i < 10!"
 } if_false: {
   Console puts: "i > 10!!"

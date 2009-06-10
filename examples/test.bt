@@ -1,33 +1,33 @@
 # this is just for demonstration
 # there probably won't be the need to require the console module from the
 # standard library every time you want to print something to the screen ;)
-System require: "console"
+#System require: "console"
 
 # we support ruby-style blocks with do ... end and curly braces { ... }
-File open: "test.txt" mode: "w" do |f|
-  f puts: "what's up, dog?!"
-  f puts: "crazy shit, yo!"
-  f puts: "hahaha!!"
-end
+# File open: "test.txt" mode: "w" do |f|
+#   f puts: "whats up, dog?!"
+#   f puts: "crazy shit, yo!"
+#   f puts: "hahaha!!"
+# end
 
-10 to: 0 do |i|
+10 upto: 0 do |i|
   Console puts: i
 end
 
 i = 0
-(i < 10) while_true: do |i|
+{i < 10} while_true do
   Console puts: i
-  i incr
+  i = i + 1
 end
 
-numbers = [1,2,3,4,5] select: {|i| i < 3}
-numbers each: do |i|
-  puts i
+numbers = [1,2,3,4,5] select {|i| i < 3}
+numbers each do |i|
+  Console puts: i
 end
 
-(1 .. 100) each: {|i| Console puts: i}
+#(1 .. 100) each {|i| Console puts: i}
 
-squares = (1 .. 100) collect: {|i| i * i}
+#squares = (1 .. 100) collect {|i| i * i}
 
 
 # define a square method
@@ -37,9 +37,11 @@ square = { |x|
 
 # or like this:
 abs = { |num|
-  (num > 0) if_true {
+  num > 0 if_true {
     return num
   }
 
   num * -1
 }
+
+Console puts: ([1,2,3,4,5] collect {|i| square call: i})

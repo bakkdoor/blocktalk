@@ -21,7 +21,7 @@ open_ports = []
       open_ports << port
 
       s = Socket getnameinfo: ["AF_INET", port, host]
-      Console puts: ("\nPort #{port} (#{s[1]})" + " is open.")
+      Console puts: ("\nPort #{port} (#{s at: 1})" + " is open.")
 
       catch{
         Console print: "."

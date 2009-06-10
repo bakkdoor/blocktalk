@@ -42,6 +42,14 @@ class Object
     end
   end
 
+  def and(other)
+    self and other
+  end
+
+  def or(other)
+    self or other
+  end
+
   # this should get called, if we try to call a method on objects of
   # ruby classes.
   # it will try to find the correct ruby method-name & clall it.

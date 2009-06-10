@@ -1,7 +1,7 @@
-((ARGV size) > 0) if_true: {
+(ARGV size) > 0 if_true: {
   filename = ARGV at: 0
   File open: filename do |f|
-    Console puts: "#{filename} has #{f.readlines.size} lines!"
+    Console puts: "#{filename} has #{f readlines size} lines!"
   end
 } if_false: {
   Console puts: "Please specify a file to count lines on!"

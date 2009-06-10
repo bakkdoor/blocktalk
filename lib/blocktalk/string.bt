@@ -1,4 +1,16 @@
 Class >> :String do
+  def at = do |index|
+    %ruby{
+      self[index]
+    }%
+  end
+
+  def at = do |index puts: value|
+    %ruby{
+      self[index] = value
+    }%
+  end
+
   def substitute = do |string with: subst_string|
     self gsub: string with: subst_string
   end

@@ -1,4 +1,5 @@
 # calling some ruby methods...
+require: "lib/blocktalk/string"
 
 File open: "examples/test3.bt" mode: "r" do |f|
   (f readlines) each do |l|
@@ -8,7 +9,7 @@ end
 
 # and again, this time cached!
 File open: "examples/test3.bt" mode: "r" do |f|
-  (f readlines) each do |l|
+  f readlines each do |l|
     Console puts: l
   end
 end
@@ -17,4 +18,5 @@ end
 str = "hello, world, how are you?"
 str2 = str gsub: "," with: "!"
 Console puts: str;
-        puts: str2
+        puts: str2;
+        puts: (str at: (2 .. 5))

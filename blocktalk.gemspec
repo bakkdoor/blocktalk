@@ -1,6 +1,6 @@
 $gemspec = Gem::Specification.new do |s|
   s.name = "blocktalk"
-  s.version = "0.1.2"
+  s.version = "0.1.3"
   s.author = "Christopher Bertels"
   s.email = "bakkdoor@flasht.de"
   s.homepage = "http://www.adztec-independent.de"

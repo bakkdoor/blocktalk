@@ -270,7 +270,7 @@ grammar Blocktalk do
 
   rule hash_literal do
     # '{' ws* '}' /
-    '{' ws* first_entry:(hash_entry)? ws* rest_pairs:(',' ws* pair:(hash_entry))*  ws* '}' {
+    '{' ws* first_entry:(hash_entry)? ws* rest_pairs:(',' ws* pair:(hash_entry) ws*)*  ws* '}' {
       def value
         if self.text_value =~ /\{\s*\}/
           return "{}"
@@ -279,7 +279,7 @@ grammar Blocktalk do
           first_pair = first_entry.value
           hash_str += "#{first_pair[0]} => #{first_pair[1]},"
           rest_pairs.elements.each do |ws_and_pair|
-            pair = ws_and_pair.pair
+            pair = ws_and_pair.pair.value
             hash_str += "#{pair[0]} => #{pair[1]},"
           end
           hash_str += "}"

@@ -1,3 +1,5 @@
 # blocktalk standard library files
 
 require: "blocktalk/array"
+require: "blocktalk/hash"
+require: "blocktalk/string"

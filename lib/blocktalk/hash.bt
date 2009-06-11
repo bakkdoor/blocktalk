@@ -1,0 +1,13 @@
+Class >> :Hash do
+  def at = do |key|
+    %ruby{
+      self[key]
+    }%
+  end
+
+  def at = do |key put: value|
+    %ruby{
+      self[key] = value
+    }%
+  end
+end

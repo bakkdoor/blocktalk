@@ -1,0 +1,8 @@
+# some literals
+
+int = 5
+float = 5.32
+#char = ?A # still not working :(
+string = "hello"
+arr = [1,2,3]
+hash = {:a => "b", :c => "d"}

@@ -3015,6 +3015,7 @@ module Blocktalk
     def pair
       elements[2]
     end
+
   end
 
   module HashLiteral1
@@ -3037,7 +3038,7 @@ module Blocktalk
         first_pair = first_entry.value
         hash_str += "#{first_pair[0]} => #{first_pair[1]},"
         rest_pairs.elements.each do |ws_and_pair|
-          pair = ws_and_pair.pair
+          pair = ws_and_pair.pair.value
           hash_str += "#{pair[0]} => #{pair[1]},"
         end
         hash_str += "}"
@@ -3123,6 +3124,19 @@ module Blocktalk
                 if r11
                   r13 = _nt_hash_entry
                   s9 << r13
+                  if r13
+                    s14, i14 = [], index
+                    loop do
+                      r15 = _nt_ws
+                      if r15
+                        s14 << r15
+                      else
+                        break
+                      end
+                    end
+                    r14 = instantiate_node(SyntaxNode,input, i14...index, s14)
+                    s9 << r14
+                  end
                 end
               end
               if s9.last
@@ -3141,26 +3155,26 @@ module Blocktalk
             r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
             s0 << r8
             if r8
-              s14, i14 = [], index
+              s16, i16 = [], index
               loop do
-                r15 = _nt_ws
-                if r15
-                  s14 << r15
+                r17 = _nt_ws
+                if r17
+                  s16 << r17
                 else
                   break
                 end
               end
-              r14 = instantiate_node(SyntaxNode,input, i14...index, s14)
-              s0 << r14
-              if r14
+              r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
+              s0 << r16
+              if r16
                 if input.index('}', index) == index
-                  r16 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                  r18 = instantiate_node(SyntaxNode,input, index...(index + 1))
                   @index += 1
                 else
                   terminal_parse_failure('}')
-                  r16 = nil
+                  r18 = nil
                 end
-                s0 << r16
+                s0 << r18
               end
             end
           end

@@ -1,5 +1,5 @@
 # ***Blocktalk*** #
-### **v0.1.2** ###
+### **v0.1.3** ###
 
 ## **Blocktalk** is a dynamic, object-oriented programming language somewhat in the tradition of Smalltalk and Ruby. ##
 
@@ -51,10 +51,10 @@ The example above shows, how a typicall if-then conditional could be written.
 
 Another example would be a while loop:
 
-    i = (Console gets: "Please enter a number!") to_i
+    i = Console gets: "Please enter a number!" to_i
     {i < 10} while_true {
 	Console print: "a smaller than b!"
-	i = (Console gets: "Enter again!") to_i
+	i = Console gets: "Enter again!" to_i
     }
 
 In this case, while_true takes a ruby-like implicit block, noticeable by the absence of the colon after the methodname,

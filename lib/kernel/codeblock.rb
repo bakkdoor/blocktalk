@@ -50,8 +50,22 @@ module Kernel
       end
     end
 
-    def until(&block)
-      self.while_false(&block)
+    def until(&condition_block)
+      while not condition_block.call
+        self.call
+      end
+    end
+
+    def if(condition)
+      if condition
+        self.call
+      end
+    end
+
+    def unless(condition)
+      unless condition
+        self.call
+      end
     end
   end
 end

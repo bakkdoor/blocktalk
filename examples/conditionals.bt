@@ -1,0 +1,37 @@
+x = 10
+y = 0
+
+{
+  y = Console gets: "please enter a positive number:" to_i
+} until {y > 0}
+
+
+x <= y if_true: {
+  Console puts: "x (#{x}) <= y (#{y})!"
+} if_false: {
+  Console puts: "x (#{x}) > y (#{y})!"
+}
+
+Console puts
+
+# blocktalk also supports the if / unless at the end, as in ruby
+{ Console puts: "x (#{x}) <= y (#{y})!" } if: (x <= y)
+{ Console puts: "x (#{x}) > y (#{y})!"} if: (x > y)
+
+Console puts
+
+# this would also work:
+{ Console puts: "x (#{x}) > y (#{y})!" } unless: (x <= y)
+
+Console puts
+
+x = 0
+{x < 10} while_true {
+  Console puts: x
+  x = x + 1
+}
+
+{x < 0} while_false {
+  Console puts: x
+  x = x - 1
+}

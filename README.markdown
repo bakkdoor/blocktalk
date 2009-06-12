@@ -15,8 +15,8 @@ For example, defining classes and modules in Blocktalk is also done via methodca
 respectively:
 
     Class >> :Foo do
-	def bar = do |baz|
-	    Console puts: "In Foo#bar with baz = #{baz}"
+	    def bar = do |baz|
+	      Console puts: "In Foo#bar with baz = #{baz}"
     	end
     end
 
@@ -41,9 +41,9 @@ can take two explicit codeblocks for a if and then part, or just a block for the
 or implicitly as a ruby-like method call with a passed in block):
 
     (a < b) if_true: {
-	Console print: "a smaller than b!"
+	    Console print: "a smaller than b!"
     } if_false: {
-	Console print: "a greater than b!"
+	    Console print: "a greater than b!"
     }
 
 Since Blocktalk supports a very easy literal syntax for codeblocks, many special keywords aren't needed (as in Smalltalk).
@@ -53,8 +53,8 @@ Another example would be a while loop:
 
     i = Console gets: "Please enter a number!" to_i
     {i < 10} while_true {
-	Console print: "a smaller than b!"
-	i = Console gets: "Enter again!" to_i
+	    Console print: "a smaller than b!"
+	    i = Console gets: "Enter again!" to_i
     }
 
 In this case, while_true takes a ruby-like implicit block, noticeable by the absence of the colon after the methodname,
@@ -68,15 +68,15 @@ Exception handling in Blocktalk is done similar to most programming languages, i
 
     i = Console gets: "Please enter a number!"
     try {
-	Console print: "10 / i = #{(10 / (i to_i))}"
+	    Console print: "10 / i = #{(10 / (i to_i))}"
    
-	catch: ZeroDivisionError do |ex|
-	    Console print: "got a exception: #{ex message}"
-	end
+	    catch: ZeroDivisionError do |ex|
+	      Console print: "got a exception: #{ex message}"
+	      end
 
-	ensure {
-	    Console print: "this will get done, no matter what value i has!"
-	}
+	    ensure {
+	      Console print: "this will get done, no matter what value i has!"
+	    }
     }
 
 This example will obviously fail if the we enter a zero. As in Ruby, the ensure-block gets run independent of an error

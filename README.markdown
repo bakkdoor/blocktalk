@@ -72,7 +72,7 @@ Exception handling in Blocktalk is done similar to most programming languages, i
    
 	    catch: ZeroDivisionError do |ex|
 	      Console print: "got a exception: #{ex message}"
-	      end
+	    end
 
 	    ensure {
 	      Console print: "this will get done, no matter what value i has!"

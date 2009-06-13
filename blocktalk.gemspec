@@ -6,9 +6,9 @@ $gemspec = Gem::Specification.new do |s|
   s.homepage = "http://www.adztec-independent.de"
   s.platform = Gem::Platform::RUBY
   s.summary = "Blocktalk is a dynamic, object-oriented programming language somewhat in the tradition of Smalltalk and Ruby."
-#  s.files = ["README.markdown", "benchmark.bt", "TODO", "LICENSE", "evaluator.rb",
+#  s.files = ["README.markdown", "benchmark.bt", "TODO", "LICENSE", "evaluator.rb", "version.rb",
 #             "{grammar,lib,bin,examples,language-spec,parser}/**/*"].map{|p| Dir[p]}.flatten
-  s.files = ["README.markdown", "benchmark.bt", "TODO", "LICENSE", "evaluator.rb",
+  s.files = ["README.markdown", "benchmark.bt", "TODO", "LICENSE", "evaluator.rb", "version.rb",
              "grammar/blocktalk.tt", "grammar/blocktalk.rb",
              "lib/core.rb",
              "lib/kernel", "lib/kernel/console.rb", "lib/kernel/array.rb", "lib/kernel/error.rb", "lib/kernel/module.rb",

@@ -1,0 +1,145 @@
+# small working webserver example
+# taken, translated & changed a bit from:
+# http://blogs.msdn.com/abhinaba/archive/2005/10/14/ruby-webserver-in-70-lines-of-code.aspx
+
+System require: "socket"
+require: "lib/blocktalk"
+
+Class >> :Logger do
+  def initialize = do |logfile|
+    @log_file = logfile
+  end
+
+  def log = do |message|
+    Console puts: "\n\n";
+            puts: ("=" * 50);
+            puts: "\n #{message}"
+
+    (@log_file == nil) if_false {
+      @log_file puts: "\n\n";
+                puts: ("=" * 50);
+                puts: "\n #{message}"
+    }
+  end
+end
+
+Class >> :Webserver do
+  def initialize = do |session request: req root_path: root_path|
+    @session = session
+    @request = req
+    @root_path = root_path
+  end
+
+  def full_path = do
+    filename = nil
+    (@request =~ /GET (.*) HTTP.*/) if {
+      filename = $1
+    }
+
+    (filename == nil) unless {
+      filename = @root_path + filename
+      filename = File expand_path: filename with: @default_path
+    }
+
+    (File directory?: filename) if {
+      filename << '/index.html'
+    }
+
+    return filename
+  end
+
+  def serve = do
+    Console puts: "trying to serve content"
+    @full_path = self full_path
+    src = nil
+    try{
+      ((File exist?: @full_path) and: (File file?: @full_path)) if_true: {
+        Console puts: "File exists: #{@full_path}"
+        # path should start with base path
+        ((@full_path index: @root_path) == 0) if_true: {
+          content_type = self content_type: @full_path
+          @session print: "HTTP/1.1 200/OK\r\nServer: Blocktalk-HTTP\r\nContent-type: #{content_type}\r\n\r\n"
+          src = File open: @full_path mode: "rb"
+
+          {src eof?} while_false {
+            buffer = src read: 256
+            @session write: buffer
+          }
+          src close
+          src = nil
+        } if_false: {
+          # should have sent a 403 Forbidden access but then the attacker knows that such a file exists
+          @session print: "HTTP/1.1 404/Object Not Found\r\nServer: Blocktalk-HTTP\r\n\r\n"
+        }
+      } if_false: {
+        Console puts: "Error: File doesnt exist: #{@full_path}"
+        @session print: "HTTP/1.1 404/Object Not Found\r\nServer: Blocktalk-HTTP\r\n\r\n"
+      }
+
+      catch: StandardError do |ex|
+        Console puts: "OOPS: #{ex inspect}"
+      end
+
+    ensure{
+        (src nil?) if_false {
+          src close
+        }
+        @session close
+      }
+    }
+  end
+
+  def content_types = do
+    {
+      ".html" => "text/html",
+      ".htm" => "text/html",
+      ".txt" => "text/plain",
+      ".css" => "text/css",
+      ".jpeg" => "image/jpeg",
+      ".jpg" => "image/jpeg",
+      ".gif" => "image/gif",
+      ".bmp" => "image/bmp",
+      ".rb" => "text/plain",
+      ".xml" => "text/xml",
+      ".xsl" => "text/xml"
+    }
+  end
+
+  def content_type = do |path|
+    ext = File extname: path
+    type = self content_types at: ext
+
+    (type nil?) if_true {
+      type = "text/html"
+    }
+
+    return type
+  end
+end
+
+root_path = "/home/bakkdoor/projekte/blocktalk/webserver/httpd/"
+logfile_name = root_path + "/log.txt"
+
+File open: logfile_name mode: "w+" do |logfile|
+  port = 3000
+  {port = ARGV at: 0} if: (ARGV at: 0)
+
+  server = TCPServer new: 'localhost' port: port
+  logger = Logger new: logfile
+
+  Kernel loop do
+    session = server accept
+    request = session gets
+    logStr =  "#{session peeraddr at: 2} (#{session peeraddr at: 3})\n"
+    logStr = logStr + (Time now localtime strftime: "%Y/%m/%d %H:%M:%S")
+    logStr = logStr + "\n#{request}"
+    logger log: logStr
+
+    Console puts: "OK"
+
+    Thread start: session with: request do |session request|
+      ws = Webserver new: session request: request root_path: root_path
+      ws serve
+    end
+  end
+end

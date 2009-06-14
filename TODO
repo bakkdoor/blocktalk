@@ -2,6 +2,7 @@
 # TODO for v0.1: #
 ##################
 
+- support namespaces / nested modules
 - add optimizations, when possible
 - add more documentation & enhance standard library (as much as possible in Blocktalk itself)
 

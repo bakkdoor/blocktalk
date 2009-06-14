@@ -396,7 +396,7 @@ grammar Blocktalk do
   # names - basically anything, that you can store something in or
   # assign to.
   rule identifier do
-    ('@' / '@@')? ([a-zA-Z]+ / '$' [0-9]) [a-zA-Z0-9_]* <IdentifierNode>
+    ('@' / '@@')? ([a-zA-Z]+ / '$' [0-9]) ([a-zA-Z0-9_] / '::')* <IdentifierNode>
   end
 
   # possible names for messages / methods

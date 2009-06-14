@@ -4281,11 +4281,29 @@ module Blocktalk
       if r5
         s11, i11 = [], index
         loop do
+          i12 = index
           if input.index(Regexp.new('[a-zA-Z0-9_]'), index) == index
-            r12 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            r13 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
-            r12 = nil
+            r13 = nil
+          end
+          if r13
+            r12 = r13
+          else
+            if input.index('::', index) == index
+              r14 = instantiate_node(SyntaxNode,input, index...(index + 2))
+              @index += 2
+            else
+              terminal_parse_failure('::')
+              r14 = nil
+            end
+            if r14
+              r12 = r14
+            else
+              self.index = i12
+              r12 = nil
+            end
           end
           if r12
             s11 << r12

@@ -66,3 +66,14 @@ Console puts: (chris distance_to: city)
 chris method_a
 chris method_b
 chris method_c: "hey" and: "ho" plus: "cool!"
+
+
+Module >> :ModuleC do
+  Module >> :ModuleD do
+  def self d_method = do
+      Console puts: "In ModuleC::ModuleD#d_method"
+    end
+  end
+end
+
+#ModuleC::ModuleD d_method

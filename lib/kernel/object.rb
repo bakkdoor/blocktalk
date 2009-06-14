@@ -71,4 +71,11 @@ class Object
       raise "Unknown method, don't know what to do: #{self.class}##{name}"
      end
   end
+
+
+  def meta_class
+    class << self
+      self
+    end
+  end
 end

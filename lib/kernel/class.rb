@@ -37,10 +37,4 @@ class Class
       end
     end
   end
-
-  def meta_class
-    class << self
-      self
-    end
-  end
 end

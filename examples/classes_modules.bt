@@ -68,12 +68,41 @@ chris method_b
 chris method_c: "hey" and: "ho" plus: "cool!"
 
 
-Module >> :ModuleC do
-  Module >> :ModuleD do
-  def self d_method = do
-      Console puts: "In ModuleC::ModuleD#d_method"
+# nested modules need to be introduces like this
+Module >> :F do
+  Module >> :G do
+    Module >> :H do
+      def self bar = do
+        Console puts: "Nested modules: In F::G::H#bar"
+      end
     end
   end
 end
 
-#ModuleC::ModuleD d_method
+F::G::H bar
+
+
+#extend an existing module
+Module >> :F do
+  def self blubb = do
+    Console puts: "In F#blubb"
+  end
+end
+
+F blubb
+
+F::G::H bar # this still works!
+
+Module >> :C do
+  Module >> :D do
+    Module >> :E do
+      Module >> :F do
+        def self foo = do
+          Console puts: "In C::D::E::F#foo"
+        end
+      end
+    end
+  end
+end
+
+C::D::E::F foo

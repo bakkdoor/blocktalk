@@ -1,5 +1,5 @@
 # ***Blocktalk*** #
-### **v0.1.5** ###
+### **v0.1.6** ###
 
 ## **Blocktalk** is a dynamic, object-oriented programming language somewhat in the tradition of Smalltalk and Ruby. ##
 

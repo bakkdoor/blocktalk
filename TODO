@@ -1,7 +1,8 @@
 ##################
-# TODO for v0.1: #
+# TODO for v0.2: #
 ##################
 
+- some nicer support for ruby getter & setter methods
 - add optimizations, when possible
 - add more documentation & enhance standard library (as much as possible in Blocktalk itself)
 

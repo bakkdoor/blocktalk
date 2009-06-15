@@ -100,9 +100,18 @@ Module >> :C do
         def self foo = do
           Console puts: "In C::D::E::F#foo"
         end
+        Class >> :G do
+          def bar = do
+            Console puts: "In instance method: C::D::E::F::G#bar"
+          end
+        end
       end
     end
   end
 end
 
 C::D::E::F foo
+
+g = C::D::E::F::G new
+g bar
+Console puts: (g class)

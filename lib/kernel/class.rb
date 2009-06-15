@@ -6,11 +6,12 @@ class Class
   def self.in__subclassing(class_name_sym, superclass = Object, &block)
     # try to find class via const_get
     # if error occurs (not found), define a new class with the given name
+    current_module = Module.current
     begin
-      classobj = Kernel::const_get(class_name_sym)
+      classobj = current_module.const_get(class_name_sym)
       classobj.class_eval(&block)
     rescue
-      Kernel::const_set(class_name_sym, Class.new(superclass, &block))
+      current_module.const_set(class_name_sym, Class.new(superclass, &block))
     end
   end
 

@@ -18,6 +18,10 @@ class Module
     @@mod_stack.pop
   end
 
+  def self.current
+    Kernel.eval((["Kernel"] + @@mod_stack).join("::"))
+  end
+
   def self.>>(module_name_sym, &block)
     self.in(module_name_sym, &block)
   end

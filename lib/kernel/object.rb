@@ -72,6 +72,11 @@ class Object
      end
   end
 
+  def chainable(&block)
+    block.call
+    self
+  end
+
 
   def meta_class
     class << self

@@ -6,8 +6,13 @@ System require: "socket"
 require: "lib/blocktalk"
 
 Class >> :Logger do
-  def initialize = do |logfile|
-    @log_file = logfile
+  def logfile = do |logfile|
+    # this makes sure, we return self at the end for easy methodchaining like in smalltalk
+    # e.g.:
+    # log = Logger new logfile: file
+    self chainable {
+      @log_file = logfile
+    }
   end
 
   def log = do |message|
@@ -80,7 +85,7 @@ Class >> :Webserver do
         Console puts: "OOPS: #{ex inspect}"
       end
 
-    ensure{
+      ensure{
         (src nil?) if_false {
           src close
         }
@@ -125,9 +130,9 @@ File open: logfile_name mode: "w+" do |logfile|
   {port = ARGV at: 0} if: (ARGV at: 0)
 
   server = TCPServer new: 'localhost' port: port
-  logger = Logger new: logfile
+  logger = Logger new logfile: logfile
 
-  Kernel loop do
+  System loop do
     session = server accept
     request = session gets
     logStr =  "#{session peeraddr at: 2} (#{session peeraddr at: 3})\n"

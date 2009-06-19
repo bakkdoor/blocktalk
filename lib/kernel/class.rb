@@ -27,6 +27,10 @@ class Class
     self.in__subclassing(class_name, superclass, &block)
   end
 
+  def extend_class(&block)
+    self.class_eval(&block)
+  end
+
   def mixin(modules = [])
     modules.each do |m|
       self.class_eval do

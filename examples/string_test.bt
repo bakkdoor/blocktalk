@@ -1,6 +1,6 @@
 # Extend String class with ends_with? method
 # that checks if a string ends with a given string.
-String extend {
+String extend_class {
   def ends_with? = do |end_string|
     start_index = -1 * (end_string length)
     end_index = end_string length

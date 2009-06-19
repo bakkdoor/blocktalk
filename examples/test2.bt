@@ -36,7 +36,7 @@ foo bar: "hello, world"
 
 # extending Foo class
 #Class in: :Foo do
-Foo extend do
+Foo extend_class do
   def bazz = do
     Console puts: "in Foo#bazz!°!!"
     self bar: "so cool!!"

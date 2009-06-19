@@ -25,8 +25,4 @@ class Module
   def self.>>(module_name_sym, &block)
     self.in(module_name_sym, &block)
   end
-
-  def extend(&block)
-    self.module_eval(&block)
-  end
 end
